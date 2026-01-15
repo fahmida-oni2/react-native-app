@@ -7,13 +7,27 @@ import { auth } from './firebaseConfig';
 
 import HomeScreen from "./pages/Home";
 import ProductScreen from "./pages/Product";
+import ServiceScreen from "./pages/Service";
 import LoginScreen from "./pages/Login";
 import SignUpScreen from "./pages/SignUp";
 import UpdateScreen from "./pages/UpdateProfile";
 import DetailsScreen from "./pages/ProductDetails";
+import DetailsServScreen from "./pages/ServiceDetails";
+import ContactScreen from "./pages/Contact";
 import CartScreen from "./pages/Cart";
+import BlogScreen from "./pages/Blogs";
+import BlogDetailsScreen from "./pages/BlogDetails";
+import Form from "./pages/Form";
 import Toast from 'react-native-toast-message';
 
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  'Warning: TRenderEngineProvider: Support for defaultProps',
+  'Warning: MemoizedTNodeRenderer: Support for defaultProps',
+  'Warning: TNodeChildrenRenderer: Support for defaultProps',
+  'Warning: bound renderChildren: Support for defaultProps',
+]);
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -40,7 +54,8 @@ export default function App() {
 
   return (
    <>
-    <NavigationContainer>
+ 
+ <NavigationContainer>
       <SafeAreaView style={styles.container}>
         <View style={styles.mainContainer}>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -49,9 +64,15 @@ export default function App() {
               <>
                 <Stack.Screen name="Home" component={HomeScreen} />
                 <Stack.Screen name="Product" component={ProductScreen} />
+                   <Stack.Screen name="Service" component={ServiceScreen} />
                 <Stack.Screen name="UpdateProfile" component={UpdateScreen} />
                  <Stack.Screen name="ProductDetails" component={DetailsScreen} />
+                  <Stack.Screen name="ServiceDetails" component={DetailsServScreen} />
                   <Stack.Screen name="Cart" component={CartScreen} />
+                   <Stack.Screen name="Contact" component={ContactScreen} />
+                    <Stack.Screen name="Blogs" component={BlogScreen} />
+                    <Stack.Screen name="BlogDetails" component={BlogDetailsScreen} />
+                     <Stack.Screen name="Form" component={Form} />
               </>
             ) : (
 
@@ -66,6 +87,8 @@ export default function App() {
       
     </NavigationContainer>
       <Toast />
+
+   
    </>
   );
 }

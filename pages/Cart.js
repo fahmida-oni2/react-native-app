@@ -39,28 +39,36 @@ export default function Cart() {
             setLoading(false);
         }
     };
-
     const removeItem = async (productId) => {
         const userEmail = auth.currentUser?.email;
 
         try {
             const response = await fetch(
-                `${NGROK_URL}/product?email=${userEmail}&productId=${productId}`, 
+                `${NGROK_URL}/product?email=${userEmail}&productId=${productId}`,
                 {
                     method: 'DELETE',
                     headers: { 'ngrok-skip-browser-warning': 'true' }
                 }
             );
 
+            const data = await response.json();
+
             if (response.ok) {
-                setCartItems(prev => prev.filter(item => item.productId !== productId));
-                Toast.show({
-                    type: 'info',
-                    text1: 'Item Removed',
-                    text2: 'Cart updated successfully.'
-                });
+                if (data.action === "decreased") {
+
+                    setCartItems(prev => prev.map(item =>
+                        item.productId === productId
+                            ? { ...item, quantity: item.quantity - 1 }
+                            : item
+                    ));
+                    Toast.show({ type: 'info', text1: 'Quantity Updated', text2: '-1 item' });
+                } else {
+
+                    setCartItems(prev => prev.filter(item => item.productId !== productId));
+                    Toast.show({ type: 'info', text1: 'Item Removed', text2: 'Cart updated successfully.' });
+                }
             } else {
-                Alert.alert("Error", "Could not remove item from server.");
+                Alert.alert("Error", "Could not update cart.");
             }
         } catch (error) {
             console.error("Delete Error:", error);
@@ -68,7 +76,7 @@ export default function Cart() {
         }
     };
 
-    
+
 
     const renderItem = ({ item }) => (
         <View style={styles.card}>
@@ -85,8 +93,13 @@ export default function Cart() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>My Online Cart</Text>
-            
+            <View style={styles.header}>
+                <Text style={styles.headerText}>Cart</Text>
+                <Text style={styles.headerSubText}>Manage your item</Text>
+            </View>
+
+
+
             {loading ? (
                 <ActivityIndicator size="large" color="purple" style={{ marginTop: 50 }} />
             ) : (
@@ -109,16 +122,25 @@ export default function Cart() {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#F8F9FA' },
-    header: { fontSize: 22, fontWeight: 'bold', marginTop: 55, textAlign: 'center', color: 'purple' },
-    card: { 
-        flexDirection: 'row', 
-        padding: 15, 
-        backgroundColor: '#fff', 
-        borderRadius: 15, 
+    header: {
+        paddingTop: 60,
+        paddingBottom: 20,
+        paddingHorizontal: 20,
+        backgroundColor: '#f9f9f9',
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee'
+    },
+    headerText: { fontSize: 24, fontWeight: 'bold', color: 'purple' },
+    headerSubText: { fontSize: 13, color: '#666', marginTop: 4 },
+    card: {
+        flexDirection: 'row',
+        padding: 15,
+        backgroundColor: '#fff',
+        borderRadius: 15,
         marginBottom: 12,
         alignItems: 'center',
         elevation: 2,
-        shadowColor: '#000', 
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
     },
@@ -128,8 +150,8 @@ const styles = StyleSheet.create({
     qty: { color: '#777', fontSize: 13, marginTop: 2 },
     deleteBtn: { padding: 10 },
     empty: { textAlign: 'center', marginTop: 100, color: 'gray', fontSize: 16 },
-    
- 
+
+
     footer: {
         position: 'absolute',
         bottom: 80,
@@ -147,11 +169,11 @@ const styles = StyleSheet.create({
     },
     totalLabel: { color: '#999', fontSize: 14 },
     totalAmount: { fontSize: 20, fontWeight: 'bold', color: '#333' },
-    checkoutBtn: { 
-        backgroundColor: 'purple', 
+    checkoutBtn: {
+        backgroundColor: 'purple',
         flexDirection: 'row',
-        paddingVertical: 12, 
-        paddingHorizontal: 25, 
+        paddingVertical: 12,
+        paddingHorizontal: 25,
         borderRadius: 15,
         alignItems: 'center'
     },

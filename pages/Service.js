@@ -1,54 +1,53 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet,
-    Text,
     View,
-    ActivityIndicator,
-    Image,
-    TouchableOpacity,
+    Text,
     FlatList,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+    ActivityIndicator,
     Dimensions
 } from 'react-native';
+import Navbar from '../components/Navbar';
 
 const { width } = Dimensions.get('window');
 const COLUMN_WIDTH = (width - 40) / 2;
 
-export default function Advertisements() {
-    const [data, setData] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const navigation = useNavigation();
+export default function Service({ navigation }) {
+    const [services, setServices] = useState([]);
+    const [loading, setLoading] = useState(true);
     const BASE_URL = 'https://theorbit.one/';
 
-    const getPosts = async () => {
+    useEffect(() => {
+        fetchServices();
+    }, []);
+
+    const fetchServices = async () => {
         try {
-            const response = await fetch('https://theorbit.one/api/all-products');
+            const response = await fetch('https://theorbit.one/api/all-services');
             const json = await response.json();
-            setData(json.products.data || []);
+            setServices(json.services.data || json.data || []);
         } catch (error) {
-            console.error(error);
+            console.error("Error fetching services:", error);
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     };
 
-    useEffect(() => {
-        getPosts();
-    }, []);
-
-    const renderProductItem = ({ item }) => (
+    const renderServiceItem = ({ item }) => (
         <TouchableOpacity
             style={styles.card}
-            onPress={() => navigation.navigate('ProductDetails', { product: item })}
+            onPress={() => navigation.navigate('ServiceDetails', { service: item })}
         >
             <View style={styles.cardInner}>
                 <Image
-                    source={{ uri: `${BASE_URL}${item.product_image}` }}
+                    source={{ uri: `${BASE_URL}${item.service_image}` }}
                     style={styles.image}
                 />
                 <View style={styles.infoContainer}>
-                    <Text style={styles.title} numberOfLines={2}>
-                        {item.banner_title || "No Title Found"}
+                    <Text style={styles.serviceTitle} numberOfLines={2}>
+                        {item.banner_title}
                     </Text>
                     <Text style={styles.viewButton}>View Details</Text>
                 </View>
@@ -56,44 +55,40 @@ export default function Advertisements() {
         </TouchableOpacity>
     );
 
+
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.headerText}>Flagship Systems</Text>
-                <Text style={styles.headerSubText}>Next-generation software tailored for modern business</Text>
+                <Text style={styles.headerText}>Services Portfolio</Text>
+                <Text style={styles.headerSubText}>Comprehensive services designed to optimize your operations</Text>
             </View>
 
-            {isLoading ? (
+            {loading ? (
                 <View style={styles.loaderContainer}>
                     <ActivityIndicator size="large" color="purple" />
                 </View>
             ) : (
                 <FlatList
-                    data={data}
-                    renderItem={renderProductItem}
+                    data={services}
+                    renderItem={renderServiceItem}
                     keyExtractor={(item, index) => index.toString()}
                     numColumns={2}
                     contentContainerStyle={styles.listContent}
                     showsVerticalScrollIndicator={false}
                     ListEmptyComponent={
-                        <Text style={styles.emptyText}>No products available.</Text>
+                        <Text style={styles.emptyText}>No services available at the moment.</Text>
                     }
                 />
             )}
+            <Navbar />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff'
-    },
-    loaderContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
+    container: { flex: 1, backgroundColor: '#fff' },
+    loaderContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     header: {
         paddingTop: 60,
         paddingBottom: 20,
@@ -106,8 +101,8 @@ const styles = StyleSheet.create({
     headerSubText: { fontSize: 13, color: '#666', marginTop: 4 },
     listContent: {
         paddingHorizontal: 10,
+        paddingTop: 10,
         paddingBottom: 80,
-        paddingTop:10
     },
     card: {
         width: COLUMN_WIDTH,
@@ -127,18 +122,23 @@ const styles = StyleSheet.create({
     image: {
         width: '100%',
         height: 120,
-        resizeMode: "cover",
+        resizeMode: 'cover',
     },
     infoContainer: {
         padding: 10,
         alignItems: 'center',
     },
-    title: {
+    serviceTitle: {
         fontSize: 14,
         fontWeight: 'bold',
+        textAlign: 'center',
         color: '#333',
-        textAlign: "center",
-        height: 40, 
+        height: 40,
+    },
+    loaderContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     viewButton: {
         marginTop: 5,

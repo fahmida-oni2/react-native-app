@@ -10,8 +10,8 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-    "NSFaceIDUsageDescription": "This app uses FaceID to log you in securely."
-  }
+        "NSFaceIDUsageDescription": "This app uses FaceID to log you in securely."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -31,6 +31,11 @@
     "experiments": {
       "tsconfigPaths": true,
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a01eeca0-9985-4bb1-a782-eac80a9ff09a"
+      }
     }
   }
 }

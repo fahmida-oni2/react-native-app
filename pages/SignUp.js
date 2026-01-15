@@ -47,11 +47,11 @@ export default function SignUp() {
       Toast.show({
         type: 'success',
         text1: 'Success',
-        text2: 'Account created! Redirecting to login...',
+        text2: 'Please log in with your new credentials.',
       });
 
       setTimeout(() => {
-        navigation.navigate('Login');
+        navigation.replace('Login');
       }, 1500);
 
     } catch (error) {

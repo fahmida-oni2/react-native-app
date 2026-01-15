@@ -44,9 +44,27 @@ export default function Navbar() {
                         styles.navText,
                         { fontWeight: isActive('Product') ? 'bold' : 'normal' }
                     ]}>
-                        Product
+                        Products
                     </Text>
                     {isActive('Product') && <View style={styles.activeIndicator} />}
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Service')}
+                    style={styles.navButton}
+                >
+                    <AntDesign
+                        name="customerservice"
+                        size={24}
+                        color={isActive('Service') ? "white" : "#d1d1d1"}
+
+                    />
+                    <Text style={[
+                        styles.navText,
+                        { fontWeight: isActive('Service') ? 'bold' : 'normal' }
+                    ]}>
+                        Services
+                    </Text>
+                    {isActive('Service') && <View style={styles.activeIndicator} />}
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('Cart')}
