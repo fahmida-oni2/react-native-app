@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { auth } from '../firebaseConfig';
 import Navbar from '../components/Navbar';
 import Toast from 'react-native-toast-message';
-
+import CustomIcon from '../components/CustomIcon';
 export default function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const BASE_URL = 'https://theorbit.one/';
-    const NGROK_URL = 'https://malarial-claretha-orchitic.ngrok-free.dev';
+    const NGROK_URL = 'https://react-native-server-three.vercel.app';
 
     useFocusEffect(
         React.useCallback(() => {
@@ -29,7 +28,7 @@ export default function Cart() {
             setLoading(true);
             const response = await fetch(`${NGROK_URL}/my-cart?email=${userEmail}`, {
                 method: 'GET',
-                headers: { 'ngrok-skip-browser-warning': 'true' }
+                headers: { 'Content-Type': 'application/json' }
             });
             const data = await response.json();
             setCartItems(data);
@@ -47,7 +46,7 @@ export default function Cart() {
                 `${NGROK_URL}/product?email=${userEmail}&productId=${productId}`,
                 {
                     method: 'DELETE',
-                    headers: { 'ngrok-skip-browser-warning': 'true' }
+                    headers: { 'Content-Type': 'application/json' }
                 }
             );
 
@@ -86,7 +85,7 @@ export default function Cart() {
                 <Text style={styles.qty}>Quantity: {item.quantity}</Text>
             </View>
             <TouchableOpacity onPress={() => removeItem(item.productId)} style={styles.deleteBtn}>
-                <Ionicons name="trash-outline" size={22} color="red" />
+                <CustomIcon name="trash-alt" size={20} color="red" />
             </TouchableOpacity>
         </View>
     );

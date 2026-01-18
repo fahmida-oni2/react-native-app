@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    View, 
-    Text, 
-    FlatList, 
-    Image, 
-    StyleSheet, 
-    TouchableOpacity, 
+import {
+    View,
+    Text,
+    FlatList,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
     ActivityIndicator,
-    Dimensions 
+    Dimensions
 } from 'react-native';
-import Navbar from '../components/Navbar'; 
-import { Ionicons } from '@expo/vector-icons';
+import Navbar from '../components/Navbar';
+import CustomIcon from '../components/CustomIcon';
 
 const { width } = Dimensions.get('window');
 
-const COLUMN_WIDTH = (width - 40) / 2; 
+const COLUMN_WIDTH = (width - 40) / 2;
 
 export default function Blogs({ navigation }) {
     const [blogs, setBlogs] = useState([]);
@@ -38,14 +38,14 @@ export default function Blogs({ navigation }) {
     };
 
     const renderBlogItem = ({ item }) => (
-        <TouchableOpacity 
+        <TouchableOpacity
             style={styles.card}
             onPress={() => navigation.navigate('BlogDetails', { blog: item })}
         >
             <View style={styles.cardInner}>
-                <Image 
-                    source={{ uri: `${BASE_URL}${item.banner_image}` }} 
-                    style={styles.image} 
+                <Image
+                    source={{ uri: `${BASE_URL}${item.banner_image}` }}
+                    style={styles.image}
                 />
                 <View style={styles.infoContainer}>
                     <Text style={styles.categoryTag}>Insights</Text>
@@ -54,7 +54,7 @@ export default function Blogs({ navigation }) {
                     </Text>
                     <View style={styles.readMoreRow}>
                         <Text style={styles.viewButton}>Read More</Text>
-                        <Ionicons name="chevron-forward" size={12} color="purple" />
+                        <CustomIcon name="chevron-right" size={10} color="purple" />
                     </View>
                 </View>
             </View>
@@ -67,7 +67,7 @@ export default function Blogs({ navigation }) {
                 <Text style={styles.headerText}>Industry Insights</Text>
                 <Text style={styles.headerSubText}>Expert perspectives on digital transformation</Text>
             </View>
-           
+
             {loading ? (
                 <View style={styles.loaderContainer}>
                     <ActivityIndicator size="large" color="purple" />
@@ -82,7 +82,11 @@ export default function Blogs({ navigation }) {
                     showsVerticalScrollIndicator={false}
                     ListEmptyComponent={
                         <View style={styles.emptyContainer}>
-                            <Ionicons name="document-text-outline" size={50} color="#ccc" />
+                            <CustomIcon
+                                name="file-alt"
+                                size={45}
+                                color="#ccc"
+                            />
                             <Text style={styles.emptyText}>No articles published yet.</Text>
                         </View>
                     }
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
     listContent: {
         paddingHorizontal: 10,
         paddingTop: 15,
-        paddingBottom: 100, 
+        paddingBottom: 100,
     },
     card: {
         width: COLUMN_WIDTH,
@@ -116,7 +120,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 15,
         elevation: 4,
-        shadowColor: '#000', 
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -158,10 +162,10 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         marginRight: 2
     },
-    loaderContainer: { 
-        flex: 1, 
-        justifyContent: 'center', 
-        alignItems: 'center' 
+    loaderContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     emptyContainer: {
         alignItems: 'center',

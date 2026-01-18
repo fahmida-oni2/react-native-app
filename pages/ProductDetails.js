@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../firebaseConfig';
 import Toast from 'react-native-toast-message';
-
+import CustomIcon from '../components/CustomIcon';
 export default function ProductDetails({ route, navigation }) {
     const { product } = route.params;
     const BASE_URL = 'https://theorbit.one/';
-    const NGROK_URL = 'https://malarial-claretha-orchitic.ngrok-free.dev';
+    const BACKEND_URI = 'https://react-native-server-three.vercel.app';
+
 
     const handleAddToCart = async () => {
         const userEmail = auth.currentUser?.email;
@@ -22,11 +22,10 @@ export default function ProductDetails({ route, navigation }) {
 
         try {
 
-            const response = await fetch(`${NGROK_URL}/product`, {
+            const response = await fetch(`${BACKEND_URI}/product`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true'
                 },
                 body: JSON.stringify({
                     email: userEmail,
@@ -58,7 +57,7 @@ export default function ProductDetails({ route, navigation }) {
     return (
         <ScrollView style={styles.container}>
             <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={24} color="white" />
+                <CustomIcon name="arrow-left" size={20} color="white" />
             </TouchableOpacity>
 
             <Image

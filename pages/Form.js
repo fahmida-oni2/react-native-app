@@ -20,26 +20,28 @@ export default function Form() {
         }
     });
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         const subject = `New Inquiry from ${data.firstName} ${data.lastName}`;
         const body = `Name: ${data.firstName} ${data.lastName}\nPhone: ${data.phoneNumber}\n\nBio/Message: ${data.bio}`;
         const url = `mailto:info@theorbit.one?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-        Linking.canOpenURL(url)
-            .then((supported) => {
-                if (!supported) {
-                    Alert.alert('Error', 'Email apps are not available on this device');
-                } else {
-                    return Linking.openURL(url);
-                }
-            })
-            .catch((err) => console.error('An error occurred', err));
+        try {
+          
+            await Linking.openURL(url);
+        } catch (err) {
+        
+            Alert.alert(
+                'Support',
+                'Could not open your email app. Please email us directly at info@theorbit.one',
+                [{ text: 'OK' }]
+            );
+        }
     };
 
     return (
-       
-              
-            <ScrollView style={styles.container}>
+
+
+        <ScrollView style={styles.container}>
             <View style={styles.formGroup}>
 
                 <View style={styles.row}>
@@ -122,8 +124,8 @@ export default function Form() {
                 </TouchableOpacity>
             </View>
         </ScrollView>
-       
-        
+
+
     );
 }
 

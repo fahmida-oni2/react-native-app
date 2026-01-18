@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import CustomIcon from '../components/CustomIcon';
 
 export default function ServiceDetails({ route, navigation }) {
     const { service } = route.params;
@@ -10,7 +10,7 @@ export default function ServiceDetails({ route, navigation }) {
     return (
         <ScrollView style={styles.container}>
             <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={24} color="white" />
+                <CustomIcon name="arrow-left" size={20} color="white" />
             </TouchableOpacity>
 
             <Image

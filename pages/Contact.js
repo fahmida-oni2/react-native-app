@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Image, Linking, ActivityIndicator } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
 import Navbar from '../components/Navbar';
-
+import CustomIcon from '../components/CustomIcon';
 export default function Contact({ navigation }) {
     const [contactInfo, setContactInfo] = useState(null);
 
@@ -45,7 +44,7 @@ export default function Contact({ navigation }) {
                             style={styles.contactRow}
                             onPress={() => openLink(contactInfo.google_map)}
                         >
-                            <Ionicons name="location-sharp" size={24} color="purple" />
+                            <CustomIcon name="map-marker-alt" size={22} color="purple" />
                             <Text style={styles.contactText}>{contactInfo.uk_address}</Text>
                         </TouchableOpacity>
 
@@ -54,7 +53,7 @@ export default function Contact({ navigation }) {
                             style={styles.contactRow}
                             onPress={() => openLink(`tel:${contactInfo.contact_phone}`)}
                         >
-                            <Ionicons name="call" size={24} color="purple" />
+                            <CustomIcon name="phone-alt" size={20} color="purple" />
                             <Text style={styles.contactText}>{contactInfo.contact_phone}</Text>
                         </TouchableOpacity>
 
@@ -63,7 +62,7 @@ export default function Contact({ navigation }) {
                             style={styles.contactRow}
                             onPress={() => openLink(`mailto:${contactInfo.contact_email}`)}
                         >
-                            <Ionicons name="mail" size={24} color="purple" />
+                            <CustomIcon name="envelope" size={20} color="purple" />
                             <Text style={styles.contactText}>{contactInfo.contact_email}</Text>
                         </TouchableOpacity>
 
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         textAlign: 'center'
     },
-      loaderContainer: {
+    loaderContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'

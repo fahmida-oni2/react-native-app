@@ -7,11 +7,10 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import { auth } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
-import { Ionicons } from '@expo/vector-icons';
 import Navbar from '../components/Navbar';
 import ProductMarquee from '../components/ProductMarquee';
 import ServiceMarquee from '../components/ServiceMarquee';
-
+import CustomIcon from '../components/CustomIcon';
 const { width } = Dimensions.get('window');
 
 export default function Home({ navigation }) {
@@ -39,20 +38,20 @@ export default function Home({ navigation }) {
                 const servJson = await servRes.json();
                 const blogJson = await blogRes.json();
 
-               
+
                 const prods = (prodJson.products?.data || []).map(item => ({
                     ...item,
                     type: 'Products',
-                    uniqueKey: `prod-${item.id}`, 
+                    uniqueKey: `prod-${item.id}`,
                     displayTitle: item.banner_title,
                     displayImage: item.product_image
                 }));
 
-               
+
                 const servs = (servJson.services?.data || []).map(item => ({
                     ...item,
                     type: 'Services',
-                    uniqueKey: `serv-${item.id}`, 
+                    uniqueKey: `serv-${item.id}`,
                     displayTitle: item.banner_title,
                     displayImage: item.service_image
                 }));
@@ -97,14 +96,14 @@ export default function Home({ navigation }) {
                 <Text style={styles.blogTitle} numberOfLines={2}>{item.blog_title}</Text>
                 <View style={styles.blogFooter}>
                     <Text style={styles.blogReadMore} onPress={() => navigation.navigate('BlogDetails', { blog: item })}>Read Post</Text>
-                    <Ionicons name="arrow-forward" size={14} color="purple" />
+                    <CustomIcon name="arrow-right" size={14} color="purple" type="Solid"/>
                 </View>
             </View>
         </View>
     );
 
     const renderCard = ({ item }) => (
-        <TouchableOpacity 
+        <TouchableOpacity
             style={styles.itemCard}
             onPress={() => navigation.navigate(item.type === 'Products' ? 'ProductDetails' : 'ServiceDetails', { service: item, product: item })}
         >
@@ -116,7 +115,7 @@ export default function Home({ navigation }) {
                 <Text style={styles.cardTitle} numberOfLines={2}>{item.displayTitle}</Text>
                 <View style={styles.cardFooter}>
                     <Text style={styles.viewText}>View Details</Text>
-                    <Ionicons name="chevron-forward" size={12} color="purple" />
+                    <CustomIcon name="chevron-right" size={12} color="purple" />
                 </View>
             </View>
         </TouchableOpacity>
@@ -124,7 +123,7 @@ export default function Home({ navigation }) {
 
     const renderHeader = () => (
         <View>
-       
+
             <View style={styles.connectContainer}>
                 <View style={styles.connectCard}>
                     <View style={styles.connectTextContainer}>
@@ -132,11 +131,11 @@ export default function Home({ navigation }) {
                         <Text style={styles.connectTitle}>Connect with us to get premium services</Text>
                         <TouchableOpacity style={styles.connectBtn} onPress={() => navigation.navigate('Form')}>
                             <Text style={styles.connectBtnText}>Connect Now</Text>
-                            <Ionicons name="arrow-forward" size={16} color="purple" />
+                            <CustomIcon name="arrow-right" size={16} color="purple" />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.connectIconBg}>
-                        <Ionicons name="chatbubbles" size={100} color="rgba(255,255,255,0.15)" />
+                        <CustomIcon name="comments" size={100} color="rgba(255,255,255,0.15)" />
                     </View>
                 </View>
             </View>
@@ -150,27 +149,27 @@ export default function Home({ navigation }) {
                 data={blogs}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => `blog-${item.id}`} 
+                keyExtractor={(item) => `blog-${item.id}`}
                 renderItem={renderBlogItem}
                 contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}
             />
 
-         
+
             <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionTitle}>Featured Systems</Text>
-                 <Text style={styles.seeAllText} onPress={() => navigation.navigate('Product')}>See All</Text>
+                <Text style={styles.seeAllText} onPress={() => navigation.navigate('Product')}>See All</Text>
             </View>
             <ProductMarquee data={products} />
 
             <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionTitle}>Service Portfolio</Text>
-                 <Text style={styles.seeAllText} onPress={() => navigation.navigate('Service')}>See All</Text>
+                <Text style={styles.seeAllText} onPress={() => navigation.navigate('Service')}>See All</Text>
             </View>
             <ServiceMarquee data={services} />
-              <View style={styles.sectionHeaderRow}>
+            <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionTitle}>Explore all items</Text>
             </View>
-       
+
             <View style={styles.filterContainer}>
                 {['All', 'Products', 'Services'].map((tab) => (
                     <TouchableOpacity
@@ -200,7 +199,7 @@ export default function Home({ navigation }) {
                     </View>
                 </View>
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <Ionicons name="person-circle" size={45} color="purple" />
+                    <CustomIcon name="user-circle" size={40} color="purple" />
                 </TouchableOpacity>
             </View>
 
@@ -208,10 +207,10 @@ export default function Home({ navigation }) {
                 <ActivityIndicator color="purple" size="large" style={{ marginTop: 50 }} />
             ) : (
                 <FlatList
-                  
+
                     data={filteredItems}
                     renderItem={renderCard}
-                    keyExtractor={(item) => item.uniqueKey} 
+                    keyExtractor={(item) => item.uniqueKey}
                     numColumns={2}
                     ListHeaderComponent={renderHeader}
                     columnWrapperStyle={styles.row}
@@ -219,7 +218,7 @@ export default function Home({ navigation }) {
                     ListEmptyComponent={<Text style={styles.emptyText}>No {activeTab} available.</Text>}
                     ListFooterComponent={<View style={{ height: 120 }} />}
                     showsVerticalScrollIndicator={false}
-                    removeClippedSubviews={true} 
+                    removeClippedSubviews={true}
                     initialNumToRender={6}
                     maxToRenderPerBatch={10}
                 />
@@ -230,21 +229,21 @@ export default function Home({ navigation }) {
                 <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPressOut={() => setModalVisible(false)}>
                     <View style={styles.modalContent}>
                         <View style={styles.profileHeader}>
-                            <Ionicons name="person-circle" size={60} color="purple" />
+                            <CustomIcon name="user-circle" size={60} color="purple" />
                             <Text style={styles.profileName}>{displayName || "No Name Set"}</Text>
                             <Text style={styles.profileEmail}>{auth.currentUser?.email}</Text>
                         </View>
                         <View style={styles.separator} />
                         <TouchableOpacity style={styles.modalItem} onPress={() => { setModalVisible(false); navigation.navigate('UpdateProfile'); }}>
-                            <Ionicons name="person-outline" size={20} color="#333" />
+                            <CustomIcon name="user-alt" size={18} color="#333" />
                             <Text style={styles.modalText}>Update Profile</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.modalItem} onPress={() => { setModalVisible(false); navigation.navigate('Contact'); }}>
-                            <Ionicons name="help-circle-outline" size={20} color="#333" />
+                            <CustomIcon name="question-circle" size={18} color="#333" />
                             <Text style={styles.modalText}>Emergency Support</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.modalItem, styles.logoutItem]} onPress={handleLogout}>
-                            <Ionicons name="log-out-outline" size={20} color="#ff4444" />
+                            <CustomIcon name="sign-out-alt" size={18} color="#ff4444" />
                             <Text style={styles.logoutLabel}>Logout</Text>
                         </TouchableOpacity>
                     </View>
@@ -285,7 +284,7 @@ const styles = StyleSheet.create({
     sectionHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: 20 },
     sectionTitle: { fontSize: 22, fontWeight: 'bold', color: 'purple', marginLeft: 20, marginTop: 25, marginBottom: 15 },
     seeAllText: { color: 'purple', fontWeight: '600', marginTop: 10 },
-    filterContainer: { flexDirection: 'row', justifyContent: "flex-start",marginLeft:18 , marginVertical: 15 },
+    filterContainer: { flexDirection: 'row', justifyContent: "flex-start", marginLeft: 18, marginVertical: 15 },
     filterBtn: { paddingHorizontal: 20, paddingVertical: 8, borderRadius: 20, backgroundColor: '#eee', marginHorizontal: 5 },
     filterBtnActive: { backgroundColor: 'purple' },
     filterText: { color: '#666', fontWeight: 'bold' },

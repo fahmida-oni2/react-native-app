@@ -19,9 +19,10 @@ import BlogScreen from "./pages/Blogs";
 import BlogDetailsScreen from "./pages/BlogDetails";
 import Form from "./pages/Form";
 import Toast from 'react-native-toast-message';
-
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import { LogBox } from 'react-native';
-
+SplashScreen.preventAutoHideAsync();
 LogBox.ignoreLogs([
   'Warning: TRenderEngineProvider: Support for defaultProps',
   'Warning: MemoizedTNodeRenderer: Support for defaultProps',
@@ -34,6 +35,12 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [fontsLoaded, fontError] = useFonts({
+    'FA7-Brands': require('./assets/fonts/Font Awesome 7 Brands-Regular-400.otf'),
+    'FA7-Regular': require('./assets/fonts/Font Awesome 7 Free-Regular-400.otf'),
+    'FA7-Solid': require('./assets/fonts/Font Awesome 7 Free-Solid-900.otf'),
+  });
+
   useEffect(() => {
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -44,14 +51,20 @@ export default function App() {
     return unsubscribe;
   }, []);
 
-  if (loading) {
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (loading || (!fontsLoaded && !fontError)) {
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <ActivityIndicator size="large" color="#007AFF" />
       </View>
     );
   }
-
   return (
    <>
  

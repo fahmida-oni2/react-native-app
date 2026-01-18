@@ -3,9 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { auth } from '../firebaseConfig';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
-
+import CustomIcon from '../components/CustomIcon';
 export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,11 +24,10 @@ export default function SignUp() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
 
-      const response = await fetch('https://malarial-claretha-orchitic.ngrok-free.dev/users', {
+      const response = await fetch('https://react-native-server-three.vercel.app/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true'
         },
         body: JSON.stringify({
           email: firebaseUser.email,
@@ -88,11 +86,12 @@ export default function SignUp() {
           onPress={() => setShowPassword(!showPassword)}
           style={styles.eyeIcon}
         >
-          <Ionicons
-            name={showPassword ? "eye-off" : "eye"}
-            size={24}
+          <CustomIcon
+            name={showPassword ? "eye-slash" : "eye"}
+            size={20}
             color="gray"
           />
+
         </TouchableOpacity>
       </View>
 

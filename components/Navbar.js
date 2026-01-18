@@ -1,7 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native'; //
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { AntDesign, Entypo, MaterialIcons } from '@expo/vector-icons';
+import CustomIcon from './CustomIcon';
 
 export default function Navbar() {
     const navigation = useNavigation();
@@ -15,9 +14,9 @@ export default function Navbar() {
                     onPress={() => navigation.navigate('Home')}
                     style={styles.navButton}
                 >
-                    <FontAwesome
+                    <CustomIcon
                         name="home"
-                        size={24}
+                        size={22}
                         color={isActive('Home') ? "white" : "#d1d1d1"}
                     />
                     <Text style={[
@@ -35,9 +34,9 @@ export default function Navbar() {
                     onPress={() => navigation.navigate('Product')}
                     style={styles.navButton}
                 >
-                    <MaterialIcons
-                        name="production-quantity-limits"
-                        size={24}
+                    <CustomIcon
+                        name="boxes"
+                        size={22}
                         color={isActive('Product') ? "white" : "#d1d1d1"}
                     />
                     <Text style={[
@@ -52,11 +51,10 @@ export default function Navbar() {
                     onPress={() => navigation.navigate('Service')}
                     style={styles.navButton}
                 >
-                    <AntDesign
-                        name="customerservice"
-                        size={24}
+                    <CustomIcon
+                        name="concierge-bell"
+                        size={22}
                         color={isActive('Service') ? "white" : "#d1d1d1"}
-
                     />
                     <Text style={[
                         styles.navText,
@@ -70,7 +68,11 @@ export default function Navbar() {
                     onPress={() => navigation.navigate('Cart')}
                     style={styles.navButton}
                 >
-                    <Entypo name="shopping-cart" size={24} color={isActive('Product') ? "white" : "#d1d1d1"} />
+                    <CustomIcon
+                        name="shopping-cart"
+                        size={22}
+                        color={isActive('Cart') ? "white" : "#d1d1d1"}
+                    />
                     <Text style={[
                         styles.navText,
                         { fontWeight: isActive('Cart') ? 'bold' : 'normal' }

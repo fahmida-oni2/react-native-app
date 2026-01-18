@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
 import RenderHTML from 'react-native-render-html';
-import { Ionicons } from '@expo/vector-icons'
+import CustomIcon from '../components/CustomIcon';
 export default function BlogDetails({ route, navigation }) {
     const { width } = useWindowDimensions();
     const blog = route.params?.blog;
@@ -38,7 +38,7 @@ export default function BlogDetails({ route, navigation }) {
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
           
             <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={24} color="white" />
+               <CustomIcon name="arrow-left" size={20} color="white" />
             </TouchableOpacity>
             
             <Image
