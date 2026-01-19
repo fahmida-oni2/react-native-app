@@ -65,21 +65,21 @@ export default function Navbar() {
                     {isActive('Service') && <View style={styles.activeIndicator} />}
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('Cart')}
+                    onPress={() => navigation.navigate('Order')}
                     style={styles.navButton}
                 >
                     <CustomIcon
                         name="shopping-cart"
                         size={22}
-                        color={isActive('Cart') ? "white" : "#d1d1d1"}
+                        color={isActive('Order') ? "white" : "#d1d1d1"}
                     />
                     <Text style={[
                         styles.navText,
-                        { fontWeight: isActive('Cart') ? 'bold' : 'normal' }
+                        { fontWeight: isActive('Order') ? 'bold' : 'normal' }
                     ]}>
-                        Cart
+                       Order
                     </Text>
-                    {isActive('Cart') && <View style={styles.activeIndicator} />}
+                    {isActive('Order') && <View style={styles.activeIndicator} />}
                 </TouchableOpacity>
             </View>
         </View>

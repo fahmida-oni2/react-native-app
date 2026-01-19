@@ -10,7 +10,7 @@ import {
     Dimensions
 } from 'react-native';
 import Navbar from '../components/Navbar';
-
+import CustomIcon from '../components/CustomIcon';
 const { width } = Dimensions.get('window');
 const COLUMN_WIDTH = (width - 40) / 2;
 
@@ -59,6 +59,9 @@ export default function Service({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+                <CustomIcon name="arrow-left" size={30} color="purple" />
+            </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Services Portfolio</Text>
                 <Text style={styles.headerSubText}>Comprehensive services designed to optimize your operations</Text>
@@ -150,5 +153,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 50,
         color: '#666',
-    }
+    },
+    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10, borderRadius: 20 },
 });

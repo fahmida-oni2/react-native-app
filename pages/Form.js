@@ -7,10 +7,14 @@ import {
     TouchableOpacity,
     ScrollView,
     Linking,
-    Alert
+    Alert,
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-export default function Form() {
+import CustomIcon from '../components/CustomIcon';
+
+export default function Form({ navigation }) {
     const { control, handleSubmit, formState: { errors }, reset } = useForm({
         defaultValues: {
             firstName: '',
@@ -26,10 +30,8 @@ export default function Form() {
         const url = `mailto:info@theorbit.one?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
         try {
-          
             await Linking.openURL(url);
         } catch (err) {
-        
             Alert.alert(
                 'Support',
                 'Could not open your email app. Please email us directly at info@theorbit.one',
@@ -39,122 +41,160 @@ export default function Form() {
     };
 
     return (
+        <View style={styles.container}>
 
-
-        <ScrollView style={styles.container}>
-            <View style={styles.formGroup}>
-
-                <View style={styles.row}>
-                    <View style={styles.flex1}>
-                        <Text style={styles.label}>First Name</Text>
-                        <Controller
-                            control={control}
-                            name="firstName"
-                            render={({ field: { onChange, value } }) => (
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Smith"
-                                    placeholderTextColor="#666"
-                                    onChangeText={onChange}
-                                    value={value}
-                                />
-                            )}
-                        />
-                    </View>
-                    <View style={[styles.flex1, { marginLeft: 15 }]}>
-                        <Text style={styles.label}>Last Name</Text>
-                        <Controller
-                            control={control}
-                            name="lastName"
-                            render={({ field: { onChange, value } }) => (
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Jonson"
-                                    placeholderTextColor="#666"
-                                    onChangeText={onChange}
-                                    value={value}
-                                />
-                            )}
-                        />
-                    </View>
-                </View>
-
-
-                {/* Phone Number */}
-                <Text style={styles.label}>Phone Number</Text>
-                <Controller
-                    control={control}
-                    name="phoneNumber"
-                    render={({ field: { onChange, value } }) => (
-                        <TextInput
-                            style={styles.input}
-                            placeholder="+1-202-555-0174"
-                            placeholderTextColor="#666"
-                            keyboardType="phone-pad"
-                            onChangeText={onChange}
-                            value={value}
-                        />
-                    )}
-                />
-
-                {/* Bio / Message */}
-                <Text style={styles.label}>Bio</Text>
-                <Controller
-                    control={control}
-                    name="bio"
-                    render={({ field: { onChange, value } }) => (
-                        <TextInput
-                            style={[styles.input, styles.textArea]}
-                            placeholder="Tell us something..."
-                            placeholderTextColor="#666"
-                            multiline
-                            numberOfLines={4}
-                            onChangeText={onChange}
-                            value={value}
-                        />
-                    )}
-                />
-
-
-                <TouchableOpacity
-                    style={styles.submitBtn}
-                    onPress={handleSubmit(onSubmit)}
-                >
-                    <Text style={styles.submitBtnText}>Send Message</Text>
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+                    <CustomIcon name="arrow-left" size={30} color="purple" />
                 </TouchableOpacity>
+                <Text style={styles.headerText}>Get in Touch</Text>
+                <Text style={styles.headerSubText}>
+                    Fill out the form below and we'll get back to you shortly.
+                </Text>
             </View>
-        </ScrollView>
 
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={{ flex: 1 }}
+            >
+                <ScrollView contentContainerStyle={styles.scrollContent}>
+                    <View style={styles.infoCard}>
+                        <View style={styles.row}>
+                            <View style={styles.flex1}>
+                                <Text style={styles.label}>First Name</Text>
+                                <Controller
+                                    control={control}
+                                    name="firstName"
+                                    render={({ field: { onChange, value } }) => (
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="Smith"
+                                            placeholderTextColor="#aaa"
+                                            onChangeText={onChange}
+                                            value={value}
+                                        />
+                                    )}
+                                />
+                            </View>
+                            <View style={[styles.flex1, { marginLeft: 15 }]}>
+                                <Text style={styles.label}>Last Name</Text>
+                                <Controller
+                                    control={control}
+                                    name="lastName"
+                                    render={({ field: { onChange, value } }) => (
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="Jonson"
+                                            placeholderTextColor="#aaa"
+                                            onChangeText={onChange}
+                                            value={value}
+                                        />
+                                    )}
+                                />
+                            </View>
+                        </View>
 
+                        <Text style={styles.label}>Phone Number</Text>
+                        <Controller
+                            control={control}
+                            name="phoneNumber"
+                            render={({ field: { onChange, value } }) => (
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="+1-202-555-0174"
+                                    placeholderTextColor="#aaa"
+                                    keyboardType="phone-pad"
+                                    onChangeText={onChange}
+                                    value={value}
+                                />
+                            )}
+                        />
+
+                        <Text style={styles.label}> Message</Text>
+                        <Controller
+                            control={control}
+                            name="bio"
+                            render={({ field: { onChange, value } }) => (
+                                <TextInput
+                                    style={[styles.input, styles.textArea]}
+                                    placeholder="Tell us something..."
+                                    placeholderTextColor="#aaa"
+                                    multiline
+                                    numberOfLines={4}
+                                    onChangeText={onChange}
+                                    value={value}
+                                />
+                            )}
+                        />
+
+                        <TouchableOpacity
+                            style={styles.submitBtn}
+                            onPress={handleSubmit(onSubmit)}
+                        >
+                            <Text style={styles.submitBtnText}>Send Message</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#12141d', padding: 20, marginTop: 10 },
-    row: { flexDirection: 'row', marginBottom: 15 },
+    container: { flex: 1, backgroundColor: '#fff' },
+    header: {
+        paddingTop: 60,
+        paddingBottom: 20,
+        paddingHorizontal: 20,
+        backgroundColor: '#f9f9f9',
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee'
+    },
+    headerText: { fontSize: 24, fontWeight: 'bold', color: 'purple' },
+    headerSubText: { fontSize: 13, color: '#666', marginTop: 4 },
+    scrollContent: {
+        alignItems: 'center',
+        paddingTop: 15,
+        paddingBottom: 100
+    },
+    infoCard: {
+        width: '90%',
+        backgroundColor: '#fff',
+        borderRadius: 15,
+        padding: 20,
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+    },
+    row: { flexDirection: 'row', marginBottom: 5 },
     flex1: { flex: 1 },
-    label: { color: '#8e9aaf', fontSize: 14, marginBottom: 8, fontWeight: '500' },
+    label: { color: 'purple', fontSize: 14, marginBottom: 8, fontWeight: '600' },
     input: {
-        backgroundColor: '#1c1f2e',
+        backgroundColor: '#fcfcfc',
         borderWidth: 1,
-        borderColor: '#3a3f54',
+        borderColor: '#eee',
         borderRadius: 10,
         padding: 12,
-        color: '#fff',
+        color: '#333',
         fontSize: 16,
-        marginBottom: 20
+        marginBottom: 15
     },
     textArea: {
-        height: 120,
+        height: 100,
         textAlignVertical: 'top'
     },
-    backBtn: { position: 'absolute', top: 50, left: 20, zIndex: 10, backgroundColor: 'rgba(0,0,0,0.5)', padding: 8, borderRadius: 20 },
     submitBtn: {
         backgroundColor: 'purple',
         padding: 16,
         borderRadius: 12,
         alignItems: 'center',
-        marginTop: 10
+        marginTop: 10,
+        shadowColor: 'purple',
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5
     },
-    submitBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 }
+    submitBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10, borderRadius: 20 },
 });

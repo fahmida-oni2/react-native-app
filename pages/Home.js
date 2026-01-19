@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import {
     View, Text, TouchableOpacity, StyleSheet,
     Image, Alert, Modal, ActivityIndicator, FlatList,
@@ -16,6 +16,7 @@ const { width } = Dimensions.get('window');
 export default function Home({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [displayName, setDisplayName] = useState(auth.currentUser?.displayName);
+    const [photoURL, setPhotoURL] = useState(auth.currentUser?.photoURL);
     const [products, setProducts] = useState([]);
     const [services, setServices] = useState([]);
     const [blogs, setBlogs] = useState([]);
@@ -70,13 +71,15 @@ export default function Home({ navigation }) {
         fetchData();
     }, []);
 
-    const filteredItems = activeTab === 'All'
-        ? allData
-        : allData.filter(item => item.type === activeTab);
-
+    const filteredItems = useMemo(() => {
+        return activeTab === 'All'
+            ? allData
+            : allData.filter(item => item.type === activeTab);
+    }, [activeTab, allData]);
     useFocusEffect(
         useCallback(() => {
             setDisplayName(auth.currentUser?.displayName);
+            setPhotoURL(auth.currentUser?.photoURL);
         }, [])
     );
 
@@ -89,37 +92,38 @@ export default function Home({ navigation }) {
     };
 
     const renderBlogItem = ({ item }) => (
-        <View style={styles.blogCard}>
+        <TouchableOpacity style={styles.blogCard} onPress={() => navigation.navigate('BlogDetails', { blog: item })}>
             <Image source={{ uri: `${BASE_URL}${item.banner_image}` }} style={styles.blogImage} resizeMode="cover" />
             <View style={styles.blogInfo}>
                 <Text style={styles.blogTag}>Article</Text>
                 <Text style={styles.blogTitle} numberOfLines={2}>{item.blog_title}</Text>
                 <View style={styles.blogFooter}>
                     <Text style={styles.blogReadMore} onPress={() => navigation.navigate('BlogDetails', { blog: item })}>Read Post</Text>
-                    <CustomIcon name="arrow-right" size={14} color="purple" type="Solid"/>
-                </View>
-            </View>
-        </View>
-    );
-
-    const renderCard = ({ item }) => (
-        <TouchableOpacity
-            style={styles.itemCard}
-            onPress={() => navigation.navigate(item.type === 'Products' ? 'ProductDetails' : 'ServiceDetails', { service: item, product: item })}
-        >
-            <Image source={{ uri: `${BASE_URL}${item.displayImage}` }} style={styles.cardImage} />
-            <View style={styles.cardInfo}>
-                <View style={[styles.typeBadge, { backgroundColor: item.type === 'Products' ? '#6200EE' : '#03DAC6' }]}>
-                    <Text style={styles.typeText}>{item.type === 'Products' ? 'PRODUCT' : 'SERVICE'}</Text>
-                </View>
-                <Text style={styles.cardTitle} numberOfLines={2}>{item.displayTitle}</Text>
-                <View style={styles.cardFooter}>
-                    <Text style={styles.viewText}>View Details</Text>
-                    <CustomIcon name="chevron-right" size={12} color="purple" />
+                    <CustomIcon name="arrow-right" size={14} color="purple" type="Solid" />
                 </View>
             </View>
         </TouchableOpacity>
     );
+
+    const renderCard = useCallback(
+        ({ item }) => (
+            <TouchableOpacity
+                style={styles.itemCard}
+                onPress={() => navigation.navigate(item.type === 'Products' ? 'ProductDetails' : 'ServiceDetails', { service: item, product: item })}
+            >
+                <Image source={{ uri: `${BASE_URL}${item.displayImage}` }} style={styles.cardImage} />
+                <View style={styles.cardInfo}>
+                    <View style={[styles.typeBadge, { backgroundColor: item.type === 'Products' ? '#6200EE' : '#03DAC6' }]}>
+                        <Text style={styles.typeText}>{item.type === 'Products' ? 'PRODUCT' : 'SERVICE'}</Text>
+                    </View>
+                    <Text style={styles.cardTitle} numberOfLines={2}>{item.displayTitle}</Text>
+                    <View style={styles.cardFooter}>
+                        <Text style={styles.viewText}>View Details</Text>
+                        <CustomIcon name="chevron-right" size={12} color="purple" />
+                    </View>
+                </View>
+            </TouchableOpacity>
+        ), [navigation])
 
     const renderHeader = () => (
         <View>
@@ -199,7 +203,14 @@ export default function Home({ navigation }) {
                     </View>
                 </View>
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <CustomIcon name="user-circle" size={40} color="purple" />
+                    {photoURL ? (
+                        <Image
+                            source={{ uri: photoURL }}
+                            style={{ width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: '#eee' }}
+                        />
+                    ) : (
+                        <CustomIcon name="user-circle" size={40} color="purple" />
+                    )}
                 </TouchableOpacity>
             </View>
 
@@ -211,6 +222,9 @@ export default function Home({ navigation }) {
                     data={filteredItems}
                     renderItem={renderCard}
                     keyExtractor={(item) => item.uniqueKey}
+                    getItemLayout={(data, index) => (
+                        { length: 220, offset: 220 * index, index }
+                    )}
                     numColumns={2}
                     ListHeaderComponent={renderHeader}
                     columnWrapperStyle={styles.row}
@@ -229,7 +243,14 @@ export default function Home({ navigation }) {
                 <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPressOut={() => setModalVisible(false)}>
                     <View style={styles.modalContent}>
                         <View style={styles.profileHeader}>
-                            <CustomIcon name="user-circle" size={60} color="purple" />
+                            {photoURL ? (
+                                <Image
+                                    source={{ uri: photoURL }}
+                                    style={{ width: 60, height: 60, borderRadius: 30, marginBottom: 10 }}
+                                />
+                            ) : (
+                                <CustomIcon name="user-circle" size={60} color="purple" />
+                            )}
                             <Text style={styles.profileName}>{displayName || "No Name Set"}</Text>
                             <Text style={styles.profileEmail}>{auth.currentUser?.email}</Text>
                         </View>

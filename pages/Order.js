@@ -5,7 +5,7 @@ import { auth } from '../firebaseConfig';
 import Navbar from '../components/Navbar';
 import Toast from 'react-native-toast-message';
 import CustomIcon from '../components/CustomIcon';
-export default function Cart() {
+export default function Cart({navigation}) {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const BASE_URL = 'https://theorbit.one/';
@@ -64,10 +64,10 @@ export default function Cart() {
                 } else {
 
                     setCartItems(prev => prev.filter(item => item.productId !== productId));
-                    Toast.show({ type: 'info', text1: 'Item Removed', text2: 'Cart updated successfully.' });
+                    Toast.show({ type: 'info', text1: 'Item Removed', text2: 'Order updated successfully.' });
                 }
             } else {
-                Alert.alert("Error", "Could not update cart.");
+                Alert.alert("Error", "Could not update order.");
             }
         } catch (error) {
             console.error("Delete Error:", error);
@@ -92,8 +92,11 @@ export default function Cart() {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+                <CustomIcon name="arrow-left" size={30} color="purple" />
+            </TouchableOpacity>
             <View style={styles.header}>
-                <Text style={styles.headerText}>Cart</Text>
+                <Text style={styles.headerText}>Order</Text>
                 <Text style={styles.headerSubText}>Manage your item</Text>
             </View>
 
@@ -107,7 +110,7 @@ export default function Cart() {
                         data={cartItems}
                         renderItem={renderItem}
                         keyExtractor={(item) => item._id.toString()}
-                        ListEmptyComponent={<Text style={styles.empty}>Your cart is empty.</Text>}
+                        ListEmptyComponent={<Text style={styles.empty}>There is no order till now.</Text>}
                         contentContainerStyle={{ padding: 20, paddingBottom: 150 }}
                     />
 
@@ -176,5 +179,6 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         alignItems: 'center'
     },
-    checkoutText: { color: '#fff', fontWeight: 'bold', fontSize: 16 }
+    checkoutText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10, borderRadius: 20 },
 });

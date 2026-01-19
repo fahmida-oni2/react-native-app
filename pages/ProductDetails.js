@@ -42,7 +42,7 @@ export default function ProductDetails({ route, navigation }) {
             if (response.ok) {
                 Toast.show({
                     type: 'success',
-                    text1: 'Added to Cart',
+                    text1: 'Added to Order List',
                 });
             } else {
                 throw new Error(result.message || "Failed to add to cart");
@@ -55,29 +55,31 @@ export default function ProductDetails({ route, navigation }) {
     };
 
     return (
-        <ScrollView style={styles.container}>
+        <View style={{ flex: 1 }}>
             <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
                 <CustomIcon name="arrow-left" size={20} color="white" />
             </TouchableOpacity>
+            <ScrollView style={styles.container}>
+                <Image
+                    source={{ uri: `${BASE_URL}${product.product_image}` }}
+                    style={styles.fullImage}
+                />
 
-            <Image
-                source={{ uri: `${BASE_URL}${product.product_image}` }}
-                style={styles.fullImage}
-            />
+                <View style={styles.infoContainer}>
+                    <Text style={styles.title}>{product.banner_title}</Text>
 
-            <View style={styles.infoContainer}>
-                <Text style={styles.title}>{product.banner_title}</Text>
+                    <View style={styles.divider} />
 
-                <View style={styles.divider} />
+                    <Text style={styles.label}>Product Description</Text>
+                    <Text style={styles.description}>{product.banner_description}</Text>
 
-                <Text style={styles.label}>Product Description</Text>
-                <Text style={styles.description}>{product.banner_description}</Text>
+                    <TouchableOpacity style={styles.buyNow} onPress={handleAddToCart}>
+                        <Text style={styles.buyNowText}>Order Now</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
+        </View>
 
-                <TouchableOpacity style={styles.buyNow} onPress={handleAddToCart}>
-                    <Text style={styles.buyNowText}>Add to Cart</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
     );
 }
 
@@ -85,12 +87,11 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#fff' },
     backBtn: { position: 'absolute', top: 50, left: 20, zIndex: 10, backgroundColor: 'rgba(0,0,0,0.5)', padding: 8, borderRadius: 20 },
     fullImage: { width: '100%', height: 400, resizeMode: 'cover' },
-    infoContainer: { padding: 20, borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: -30, backgroundColor: 'white' },
+    infoContainer: { padding: 20, borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: -30, backgroundColor: 'white',textAlign:'left' },
     title: { fontSize: 24, fontWeight: 'bold', color: '#333' },
-    price: { fontSize: 22, color: 'purple', fontWeight: 'bold', marginVertical: 10 },
     divider: { height: 1, backgroundColor: '#eee', marginVertical: 15 },
     label: { fontSize: 16, fontWeight: 'bold', color: '#555', marginBottom: 5 },
-    description: { fontSize: 15, color: '#666', lineHeight: 22 },
+    description: { fontSize: 15, color: '#666', lineHeight: 22 ,textAlign:'justify'},
     buyNow: { backgroundColor: 'purple', padding: 18, borderRadius: 15, marginTop: 30, alignItems: 'center' },
     buyNowText: { color: '#fff', fontWeight: 'bold', fontSize: 18 }
 });

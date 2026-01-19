@@ -63,6 +63,9 @@ export default function Blogs({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+                <CustomIcon name="arrow-left" size={30} color="purple" />
+            </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Industry Insights</Text>
                 <Text style={styles.headerSubText}>Expert perspectives on digital transformation</Text>
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
     headerSubText: { fontSize: 13, color: '#666', marginTop: 4 },
     listContent: {
         paddingHorizontal: 10,
-        paddingTop: 15,
+        paddingTop: 10,
         paddingBottom: 100,
     },
     card: {
@@ -175,5 +178,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         color: '#999',
         fontSize: 14,
-    }
+    },
+    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10, borderRadius: 20 },
 });

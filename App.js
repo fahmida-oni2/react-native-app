@@ -14,7 +14,7 @@ import UpdateScreen from "./pages/UpdateProfile";
 import DetailsScreen from "./pages/ProductDetails";
 import DetailsServScreen from "./pages/ServiceDetails";
 import ContactScreen from "./pages/Contact";
-import CartScreen from "./pages/Cart";
+import CartScreen from "./pages/Order";
 import BlogScreen from "./pages/Blogs";
 import BlogDetailsScreen from "./pages/BlogDetails";
 import Form from "./pages/Form";
@@ -81,7 +81,7 @@ export default function App() {
                 <Stack.Screen name="UpdateProfile" component={UpdateScreen} />
                  <Stack.Screen name="ProductDetails" component={DetailsScreen} />
                   <Stack.Screen name="ServiceDetails" component={DetailsServScreen} />
-                  <Stack.Screen name="Cart" component={CartScreen} />
+                  <Stack.Screen name="Order" component={CartScreen} />
                    <Stack.Screen name="Contact" component={ContactScreen} />
                     <Stack.Screen name="Blogs" component={BlogScreen} />
                     <Stack.Screen name="BlogDetails" component={BlogDetailsScreen} />

@@ -26,9 +26,13 @@ export default function Contact({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+                <CustomIcon name="arrow-left" size={30} color="purple" />
+            </TouchableOpacity>
 
             <View style={styles.header}>
                 <Text style={styles.headerText}>Contact Us</Text>
+                <Text style={styles.headerSubText}>Reach out to us via phone, email, or visit our office</Text>
             </View>
 
 
@@ -36,7 +40,7 @@ export default function Contact({ navigation }) {
 
                 {contactInfo ? (
                     <View style={styles.infoCard}>
-                        <Text style={styles.director}>Director: {contactInfo.director_name}</Text>
+
 
                         <View style={styles.separator} />
 
@@ -65,6 +69,14 @@ export default function Contact({ navigation }) {
                             <CustomIcon name="envelope" size={20} color="purple" />
                             <Text style={styles.contactText}>{contactInfo.contact_email}</Text>
                         </TouchableOpacity>
+                        {/* Website */}
+                        <TouchableOpacity
+                            style={styles.contactRow}
+                            onPress={() => openLink('https://theorbit.one/')}
+                        >
+                            <CustomIcon name="globe" size={20} color="purple" />
+                            <Text style={styles.contactText}>theorbit.one</Text>
+                        </TouchableOpacity>
 
                         <View style={styles.footerBox}>
                             <Text style={styles.footerText}>{contactInfo.footer_short}</Text>
@@ -85,23 +97,25 @@ export default function Contact({ navigation }) {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#fff' },
     header: {
-
-        alignItems: 'center',
-        paddingHorizontal: 20,
         paddingTop: 60,
         paddingBottom: 20,
+        paddingHorizontal: 20,
         backgroundColor: '#f9f9f9',
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee'
     },
     headerText: { fontSize: 24, fontWeight: 'bold', color: 'purple' },
+    headerSubText: { fontSize: 13, color: '#666', marginTop: 4 },
     logoContainer: { flexDirection: 'row', alignItems: 'center' },
     headerTitle: { fontSize: 20, fontWeight: 'bold', color: 'purple', marginLeft: 10 },
     logo: { width: 40, height: 40, borderRadius: 20 },
-    scrollContent: { alignItems: 'center', paddingBottom: 100 },
+    scrollContent: { alignItems: 'center', paddingBottom: 80,paddingTop:10 },
 
     infoCard: {
         width: '90%',
         backgroundColor: '#fff',
         borderRadius: 15,
+        marginTop: 10,
         padding: 20,
         elevation: 4,
         shadowColor: '#000',
@@ -138,5 +152,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
-    }
+    },
+    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10, borderRadius: 20 },
 });

@@ -1,15 +1,18 @@
 import React from 'react';
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Advertisements from "../components/Advertisements";
 import Navbar from '../components/Navbar';
-
-export default function Product() {
+import CustomIcon from '../components/CustomIcon';
+export default function Product({navigation}) {
     return (
         <View style={styles.screenWrapper}>
+            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+                <CustomIcon name="arrow-left" size={30} color="purple" />
+            </TouchableOpacity>
             <View style={styles.content}>
                 <Advertisements />
             </View>
-            
+
             <Navbar />
         </View>
     );
@@ -21,6 +24,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     content: {
-        flex: 1, 
+        flex: 1,
     },
+    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10,  borderRadius: 20 },
 });

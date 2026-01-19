@@ -22,6 +22,7 @@ const ICON_MAP = {
   'sign-out-alt': '\uf2f5',
   'question-circle': '\uf059',
   'file-alt': '\uf15c',
+  'globe': '\uf0ac',
 };
 
 export default function CustomIcon({ name, size = 24, color = 'black', type = 'Solid' }) {
