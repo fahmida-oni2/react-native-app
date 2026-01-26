@@ -6,10 +6,16 @@ export default function ServiceDetails({ route, navigation }) {
     const { service } = route.params;
     const BASE_URL = 'https://theorbit.one/';
 
-
+    const handleSafeBack = () => {
+        if (navigation.canGoBack()) {
+            navigation.goBack();
+        } else {
+            navigation.navigate("Home");
+        }
+    };
     return (
         <View style={{ flex: 1 }}>
-            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
                 <CustomIcon name="arrow-left" size={20} color="white" />
             </TouchableOpacity>
             <ScrollView style={styles.container}>

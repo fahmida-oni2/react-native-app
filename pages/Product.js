@@ -4,9 +4,16 @@ import Advertisements from "../components/Advertisements";
 import Navbar from '../components/Navbar';
 import CustomIcon from '../components/CustomIcon';
 export default function Product({navigation}) {
+     const handleSafeBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate("Home");
+    }
+  };
     return (
         <View style={styles.screenWrapper}>
-            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
                 <CustomIcon name="arrow-left" size={30} color="purple" />
             </TouchableOpacity>
             <View style={styles.content}>

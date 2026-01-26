@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { auth } from '../firebaseConfig';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { auth } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useNavigation } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
-import CustomIcon from '../components/CustomIcon';
+import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
+import CustomIcon from "../components/CustomIcon";
 export default function SignUp() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -21,19 +34,26 @@ export default function SignUp() {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
       const firebaseUser = userCredential.user;
 
-      const response = await fetch('https://react-native-server-three.vercel.app/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        "https://react-native-server-three.vercel.app/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: firebaseUser.email,
+            uid: firebaseUser.uid,
+          }),
         },
-        body: JSON.stringify({
-          email: firebaseUser.email,
-          uid: firebaseUser.uid,
-        }),
-      });
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -42,101 +62,154 @@ export default function SignUp() {
 
       await auth.signOut();
 
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Please log in with your new credentials.',
-      });
-
+      // Toast.show({
+      //   type: "success",
+      //   text1: "Success",
+      //   text2: "Please log in with your new credentials.",
+      //   visibilityTime: 1000,
+      //   autoHide: true,
+      //   onShow: () => {},
+      //   onHide: () => {},
+      //   props: {
+      //     duration: 1000,
+      //   },
+      // });
+   Alert.alert("Success", "Please log in with your new credentials");
       setTimeout(() => {
-        navigation.replace('Login');
+        navigation.replace("Login");
       }, 1500);
-
     } catch (error) {
-      Toast.show({
-        type: 'error',
-        text1: 'Signup Failed',
-        text2: error.message
-      });
+      // Toast.show({
+      //   type: "error",
+      //   text1: "Signup Failed",
+      //   text2: error.message,
+      // });
+        Alert.alert("Error", "SignUp failed");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.container}>
+              <Text style={styles.title}>Create Account</Text>
 
-      <TextInput
-        placeholder="Email"
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+              <TextInput
+                placeholder="Email"
+                placeholderTextColor="#999999"
+                style={[styles.input, { color: "#000000" }]}
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
 
-      <View style={styles.passwordWrapper}>
-        <TextInput
-          placeholder="Password"
-          style={styles.passwordInput}
-          secureTextEntry={!showPassword}
-          value={password}
-          onChangeText={setPassword}
-        />
-        <TouchableOpacity
-          onPress={() => setShowPassword(!showPassword)}
-          style={styles.eyeIcon}
-        >
-          <CustomIcon
-            name={showPassword ? "eye-slash" : "eye"}
-            size={20}
-            color="gray"
-          />
+              <View style={styles.passwordWrapper}>
+                <TextInput
+                  placeholder="Password"
+                  placeholderTextColor="#999999"
+                  style={styles.passwordInput}
+                  secureTextEntry={!showPassword}
+                  value={password}
+                  onChangeText={setPassword}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                >
+                  <CustomIcon
+                    name={showPassword ? "eye-slash" : "eye"}
+                    size={20}
+                    color="gray"
+                  />
+                </TouchableOpacity>
+              </View>
 
-        </TouchableOpacity>
-      </View>
+              <TextInput
+                placeholder="Confirm Password"
+                placeholderTextColor="#999999"
+                style={styles.input}
+                secureTextEntry={!showPassword}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+              />
 
-      <TextInput
-        placeholder="Confirm Password"
-        style={styles.input}
-        secureTextEntry={!showPassword}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-      />
+              <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+                <Text style={styles.buttonText}>Register</Text>
+              </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.linkText}>Already have an account? <Text style={styles.linkButton}>Login</Text></Text>
-      </TouchableOpacity>
-    </View>
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <Text style={styles.linkText}>
+                  Already have an account?{" "}
+                  <Text style={styles.linkButton}>Login</Text>
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#fff' },
-  title: { fontSize: 32, fontWeight: 'bold', marginBottom: 40, textAlign: 'center', color: "purple" },
-  input: { borderBottomWidth: 1, borderBottomColor: '#ccc', marginBottom: 20, padding: 10, fontSize: 16 },
+  container: {
+    padding: 20,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    minHeight: "100%",
+  },
+  scrollContainer: {
+    flexGrow: 1,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    marginBottom: 40,
+    textAlign: "center",
+    color: "purple",
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    marginBottom: 20,
+    padding: 10,
+    fontSize: 16,
+    color: "#333",
+  },
 
   passwordWrapper: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     marginBottom: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   passwordInput: {
     flex: 1,
     padding: 10,
     fontSize: 16,
+    color: "#000000",
   },
   eyeIcon: {
     padding: 10,
   },
 
-  button: { backgroundColor: 'purple', padding: 15, borderRadius: 8, alignItems: 'center' },
-  buttonText: { color: '#fff', fontSize: 18, fontWeight: '600' },
-  linkText: { color: 'purple', textAlign: 'center', marginTop: 20 },
-  linkButton: { fontWeight: "bold" }
+  button: {
+    backgroundColor: "purple",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  buttonText: { color: "#fff", fontSize: 18, fontWeight: "600" },
+  linkText: { color: "purple", textAlign: "center", marginTop: 20 },
+  linkButton: { fontWeight: "bold" },
 });

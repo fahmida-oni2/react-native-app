@@ -1,15 +1,20 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
-import RenderHTML from 'react-native-render-html';
 import CustomIcon from '../components/CustomIcon';
 export default function BlogDetails({ route, navigation }) {
     const { width } = useWindowDimensions();
     const blog = route.params?.blog;
     const BASE_URL = 'https://theorbit.one/';
-
+ const handleSafeBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate("Home");
+    }
+  };
     return (
         <View style={{ flex: 1 }}>
-            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
                 <CustomIcon name="arrow-left" size={20} color="white" />
             </TouchableOpacity>
             <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>

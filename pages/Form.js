@@ -23,7 +23,13 @@ export default function Form({ navigation }) {
             bio: ''
         }
     });
-
+ const handleSafeBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate("Home");
+    }
+  };
     const onSubmit = async (data) => {
         const subject = `New Inquiry from ${data.firstName} ${data.lastName}`;
         const body = `Name: ${data.firstName} ${data.lastName}\nPhone: ${data.phoneNumber}\n\nBio/Message: ${data.bio}`;
@@ -44,7 +50,7 @@ export default function Form({ navigation }) {
         <View style={styles.container}>
 
             <View style={styles.header}>
-                <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+                <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
                     <CustomIcon name="arrow-left" size={30} color="purple" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Get in Touch</Text>

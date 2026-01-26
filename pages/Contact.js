@@ -23,10 +23,16 @@ export default function Contact({ navigation }) {
             Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
         }
     };
-
+ const handleSafeBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate("Home");
+    }
+  };
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
                 <CustomIcon name="arrow-left" size={30} color="purple" />
             </TouchableOpacity>
 

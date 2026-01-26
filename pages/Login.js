@@ -1,145 +1,216 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { auth } from '../firebaseConfig';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context"; // Modern Safe Area
+import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigation } from '@react-navigation/native';
-import * as LocalAuthentication from 'expo-local-authentication';
-import * as SecureStore from 'expo-secure-store';
-import Toast from 'react-native-toast-message';
-import CustomIcon from '../components/CustomIcon';
+import { useNavigation } from "@react-navigation/native";
+import * as LocalAuthentication from "expo-local-authentication";
+import * as SecureStore from "expo-secure-store";
+import Toast from "react-native-toast-message";
+import CustomIcon from "../components/CustomIcon";
+
 export default function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
-    const handleLogin = async () => {
-        try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-            if (userCredential.user) {
-                await SecureStore.setItemAsync('user_email', email);
-                await SecureStore.setItemAsync('user_password', password);
-                Toast.show({
-                    type: 'success',
-                    text1: 'Success',
-                    text2: 'Credentials saved for Biometrics'
-                });
-            }
-        } catch (error) {
-            Alert.alert("Login Error", error.message);
+      if (userCredential.user) {
+        // Save for later biometric login
+        await SecureStore.setItemAsync("user_email", email);
+        await SecureStore.setItemAsync("user_password", password);
+        
+        // Toast.show({
+        //   type: "success",
+        //   text1: "Success",
+        //   text2: "Credentials saved for Biometrics",
+        //   visibilityTime: 1000,
+        //   autoHide: true,
+        // });
+        Alert.alert("Success", "Credintial Saved for Biometrics!");
+      }
+    } catch (error) {
+      Alert.alert("Login Error", error.message);
+    }
+  };
+
+  const handleBiometricAuth = async () => {
+    try {
+      const hasHardware = await LocalAuthentication.hasHardwareAsync();
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+
+      if (!hasHardware || !isEnrolled) {
+        Alert.alert("Error", "Biometrics not supported or set up on this device.");
+        return;
+      }
+
+      const result = await LocalAuthentication.authenticateAsync({
+        promptMessage: "Login with Biometrics",
+        fallbackLabel: "Use Password",
+      });
+
+      if (result.success) {
+        const storedEmail = await SecureStore.getItemAsync("user_email");
+        const storedPassword = await SecureStore.getItemAsync("user_password");
+
+        if (storedEmail && storedPassword) {
+          await signInWithEmailAndPassword(auth, storedEmail, storedPassword);
+        //   Toast.show({
+        //     type: "success",
+        //     text1: "Success",
+        //     text2: "Login with Biometric!",
+        //     visibilityTime: 1000,
+        //     autoHide: true,
+        //   });
+        Alert.alert("Success", "Login with Biometric!");
+        } else {
+          Alert.alert("Notice", "Please login with password first to enable biometrics.");
         }
-    };
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const handleBiometricAuth = async () => {
-        try {
-            const hasHardware = await LocalAuthentication.hasHardwareAsync();
-            const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView 
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.container}>
+              <Text style={styles.title}>Welcome</Text>
 
-            if (!hasHardware || !isEnrolled) {
-                alert("Biometrics not supported or set up on this device.");
-                return;
-            }
-
-            const result = await LocalAuthentication.authenticateAsync({
-                promptMessage: 'Login with Biometrics',
-                fallbackLabel: 'Use Password',
-            });
-
-            if (result.success) {
-                const storedEmail = await SecureStore.getItemAsync('user_email');
-                const storedPassword = await SecureStore.getItemAsync('user_password');
-
-                if (storedEmail && storedPassword) {
-                    await signInWithEmailAndPassword(auth, storedEmail, storedPassword);
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Success',
-                        text2: 'Login with Biometric!'
-                    });
-                } else {
-                    alert("Please login with password first to enable biometrics.");
-                }
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Welcome</Text>
-
-            <TextInput
+              <TextInput
                 placeholder="Email"
-                style={styles.input}
+                placeholderTextColor="#999999" // Fixed for APK visibility
+                style={[styles.input, { color: '#000000' }]} // Fixed for APK visibility
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
                 keyboardType="email-address"
-            />
+              />
 
-            <View style={styles.passwordContainer}>
+              <View style={styles.passwordContainer}>
                 <TextInput
-                    placeholder="Password"
-                    style={styles.passwordInput}
-                    secureTextEntry={!showPassword}
-                    value={password}
-                    onChangeText={setPassword}
+                  placeholder="Password"
+                  placeholderTextColor="#999999" // Fixed for APK visibility
+                  style={[styles.passwordInput, { color: '#000000' }]} // Fixed for APK visibility
+                  secureTextEntry={!showPassword}
+                  value={password}
+                  onChangeText={setPassword}
                 />
                 <TouchableOpacity
-                    onPress={() => setShowPassword(!showPassword)}
-                    style={styles.eyeIcon}
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
                 >
-                    <CustomIcon
-                        name={showPassword ? "eye-slash" : "eye"}
-                        size={20}
-                        color="gray"
-                    />
+                  <CustomIcon
+                    name={showPassword ? "eye-slash" : "eye"}
+                    size={20}
+                    color="gray"
+                  />
                 </TouchableOpacity>
-            </View>
+              </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+              <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
 
-            <TouchableOpacity onPress={handleBiometricAuth} style={styles.biometricButton}>
+              <TouchableOpacity
+                onPress={handleBiometricAuth}
+                style={styles.biometricButton}
+              >
                 <CustomIcon name="fingerprint" size={40} color="purple" />
-                <Text style={{ color: 'purple', marginTop: 5 }}>Biometric Login</Text>
-            </TouchableOpacity>
+                <Text style={{ color: "purple", marginTop: 5 }}>Biometric Login</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-                <Text style={styles.linkText}>Don't have an account? <Text style={styles.linkButton}>Sign Up</Text></Text>
-            </TouchableOpacity>
-        </View>
-    );
+              <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+                <Text style={styles.linkText}>
+                  Don't have an account? <Text style={styles.linkButton}>Sign Up</Text>
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#fff' },
-    title: { fontSize: 32, fontWeight: 'bold', marginBottom: 40, textAlign: 'center', color: "purple" },
-    input: { borderBottomWidth: 1, borderBottomColor: '#ccc', marginBottom: 20, padding: 10, fontSize: 16 },
-
-    passwordContainer: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        marginBottom: 20,
-        alignItems: 'center',
-    },
-    passwordInput: {
-        flex: 1,
-        padding: 10,
-        fontSize: 16,
-    },
-    eyeIcon: {
-        padding: 10,
-    },
-
-    button: { backgroundColor: 'purple', padding: 15, borderRadius: 8, alignItems: 'center' },
-    buttonText: { color: '#fff', fontSize: 18, fontWeight: '600' },
-    linkText: { color: 'purple', textAlign: 'center', marginTop: 20 },
-    linkButton: { fontWeight: "bold", textDecorationStyle: "solid" },
-    biometricButton: { alignItems: "center", justifyContent: "center", marginTop: 20 }
+  scrollContainer: {
+    flexGrow: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 20,
+    backgroundColor: "#fff",
+    minHeight: '100%',
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    marginBottom: 40,
+    textAlign: "center",
+    color: "purple",
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    marginBottom: 20,
+    padding: 10,
+    fontSize: 16,
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 10,
+    fontSize: 16,
+  },
+  eyeIcon: {
+    padding: 10,
+  },
+  button: {
+    backgroundColor: "purple",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  buttonText: { color: "#fff", fontSize: 18, fontWeight: "600" },
+  linkText: { color: "purple", textAlign: "center", marginTop: 20 },
+  linkButton: { fontWeight: "bold" },
+  biometricButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
 });
