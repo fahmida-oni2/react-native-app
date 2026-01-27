@@ -1,29 +1,25 @@
 {
   "expo": {
-    "name": "Orbit Media",
+    "name": "Orbit Media Solutions",
     "slug": "orbit-media",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/image.png",
+    "icon": "./assets/orbitLogo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.orbitmedia.app",
       "infoPlist": {
         "NSFaceIDUsageDescription": "This app uses FaceID to log you in securely.",
-        "LSApplicationQueriesSchemes": [
-          "mailto"
-        ],
+        "LSApplicationQueriesSchemes": ["mailto"],
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/image.png",
+        "foregroundImage": "./assets/orbitLogo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.orbitmedia.app",
@@ -43,7 +39,7 @@
       ]
     },
     "web": {
-      "favicon": "./assets/image.png"
+      "favicon": "./assets/orbitLogo.png"
     },
     "plugins": [
       "expo-asset",
@@ -55,6 +51,14 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends.",
           "cameraPermission": "The app accesses your camera to let you take a profile picture."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
       ]
     ],
@@ -70,4 +74,3 @@
     "owner": "fahmidaoni2"
   }
 }
- 
