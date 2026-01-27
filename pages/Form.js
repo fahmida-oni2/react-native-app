@@ -51,7 +51,7 @@ export default function Form({ navigation }) {
 
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
-                    <CustomIcon name="arrow-left" size={30} color="purple" />
+                    <CustomIcon name="arrow-left" size={30} color="#1A3067" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Get in Touch</Text>
                 <Text style={styles.headerSubText}>
@@ -149,14 +149,14 @@ export default function Form({ navigation }) {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#fff' },
     header: {
-        paddingTop: 60,
+        paddingTop: 25,
         paddingBottom: 20,
         paddingHorizontal: 20,
         backgroundColor: '#f9f9f9',
         borderBottomWidth: 1,
         borderBottomColor: '#eee'
     },
-    headerText: { fontSize: 24, fontWeight: 'bold', color: 'purple' },
+    headerText: { fontSize: 24, fontWeight: 'bold', color: '#1A3067' },
     headerSubText: { fontSize: 13, color: '#666', marginTop: 4 },
     scrollContent: {
         alignItems: 'center',
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     },
     row: { flexDirection: 'row', marginBottom: 5 },
     flex1: { flex: 1 },
-    label: { color: 'purple', fontSize: 14, marginBottom: 8, fontWeight: '600' },
+    label: { color: '#1A3067', fontSize: 14, marginBottom: 8, fontWeight: '600' },
     input: {
         backgroundColor: '#fcfcfc',
         borderWidth: 1,
@@ -191,16 +191,16 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top'
     },
     submitBtn: {
-        backgroundColor: 'purple',
+        backgroundColor: '#1A3067',
         padding: 16,
         borderRadius: 12,
         alignItems: 'center',
         marginTop: 10,
-        shadowColor: 'purple',
+        shadowColor: '#1A3067',
         shadowOpacity: 0.3,
         shadowRadius: 5,
         elevation: 5
     },
     submitBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10, borderRadius: 20 },
+    backBtn: { position: 'absolute', top: 1, left: 20, zIndex: 10, borderRadius: 20 },
 });

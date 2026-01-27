@@ -7,19 +7,23 @@
     "icon": "./assets/orbitLogo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.orbitmedia.app",
       "infoPlist": {
         "NSFaceIDUsageDescription": "This app uses FaceID to log you in securely.",
-        "LSApplicationQueriesSchemes": ["mailto"],
+        "LSApplicationQueriesSchemes": [
+          "mailto"
+        ],
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/orbitLogo.png",
+        "foregroundImage": "./assets/bg.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.orbitmedia.app",
@@ -68,9 +72,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "2848b48b-0a04-41ff-99c0-946b15049a8e"
+        "projectId": "55c0b7ce-2ef4-432f-a9d7-f5e9de9fde40"
       }
     },
-    "owner": "fahmidaoni2"
+    "owner": "fahmidaorbit"
   }
 }

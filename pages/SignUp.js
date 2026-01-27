@@ -16,7 +16,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
-import Toast from "react-native-toast-message";
 import CustomIcon from "../components/CustomIcon";
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -62,28 +61,11 @@ export default function SignUp() {
 
       await auth.signOut();
 
-      // Toast.show({
-      //   type: "success",
-      //   text1: "Success",
-      //   text2: "Please log in with your new credentials.",
-      //   visibilityTime: 1000,
-      //   autoHide: true,
-      //   onShow: () => {},
-      //   onHide: () => {},
-      //   props: {
-      //     duration: 1000,
-      //   },
-      // });
    Alert.alert("Success", "Please log in with your new credentials");
       setTimeout(() => {
         navigation.replace("Login");
       }, 1500);
     } catch (error) {
-      // Toast.show({
-      //   type: "error",
-      //   text1: "Signup Failed",
-      //   text2: error.message,
-      // });
         Alert.alert("Error", "SignUp failed");
     }
   };
@@ -175,7 +157,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 40,
     textAlign: "center",
-    color: "purple",
+    color: "#1A3067",
   },
   input: {
     borderBottomWidth: 1,
@@ -204,12 +186,12 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "purple",
+    backgroundColor: "#1A3067",
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
   },
   buttonText: { color: "#fff", fontSize: 18, fontWeight: "600" },
-  linkText: { color: "purple", textAlign: "center", marginTop: 20 },
+  linkText: { color: "#1A3067", textAlign: "center", marginTop: 20 },
   linkButton: { fontWeight: "bold" },
 });

@@ -9,7 +9,6 @@ import {
   Alert,
 } from "react-native";
 import { auth } from "../firebaseConfig";
-import Toast from "react-native-toast-message";
 import CustomIcon from "../components/CustomIcon";
 export default function ProductDetails({ route, navigation }) {
   const { product } = route.params;
@@ -58,16 +57,6 @@ export default function ProductDetails({ route, navigation }) {
       const result = await response.json();
 
       if (response.ok) {
-        // Toast.show({
-        //   type: "success",
-        //   text1: "added to order list!",
-        //   onPress: () => Toast.hide(),
-        // });
-
-        // setTimeout(() => {
-        //   Toast.hide();
-        //   navigation.goBack();
-        // }, 1500);
         Alert.alert("Success", "added to order list!");
       } else {
         throw new Error(result.message || "Failed to add to order list");
@@ -139,7 +128,7 @@ const styles = StyleSheet.create({
     textAlign: "justify",
   },
   buyNow: {
-    backgroundColor: "purple",
+    backgroundColor: "#1A3067",
     padding: 18,
     borderRadius: 15,
     marginTop: 30,

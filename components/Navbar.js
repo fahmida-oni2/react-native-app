@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         height: 60,
-        backgroundColor: 'purple',
+        backgroundColor: '#1A3067',
         flexDirection: 'row',
         alignItems: "center",
         justifyContent: "space-around",

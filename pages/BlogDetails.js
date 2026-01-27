@@ -49,6 +49,6 @@ const styles = StyleSheet.create({
     divider: { height: 1, backgroundColor: '#eee', marginVertical: 15 },
     label: { fontSize: 16, fontWeight: 'bold', color: '#555', marginBottom: 5 },
     description: { fontSize: 15, color: '#666', lineHeight: 22 ,textAlign:'justify'},
-    actionButton: { backgroundColor: 'purple', padding: 18, borderRadius: 15, marginTop: 20, alignItems: 'center' },
+    actionButton: { backgroundColor: '#1A3067', padding: 18, borderRadius: 15, marginTop: 20, alignItems: 'center' },
     actionButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 18 }
 });

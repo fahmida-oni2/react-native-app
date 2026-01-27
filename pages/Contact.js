@@ -33,7 +33,7 @@ export default function Contact({ navigation }) {
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
-                <CustomIcon name="arrow-left" size={30} color="purple" />
+                <CustomIcon name="arrow-left" size={30} color="#1A3067" />
             </TouchableOpacity>
 
             <View style={styles.header}>
@@ -54,7 +54,7 @@ export default function Contact({ navigation }) {
                             style={styles.contactRow}
                             onPress={() => openLink(contactInfo.google_map)}
                         >
-                            <CustomIcon name="map-marker-alt" size={22} color="purple" />
+                            <CustomIcon name="map-marker-alt" size={22} color="#1A3067" />
                             <Text style={styles.contactText}>{contactInfo.uk_address}</Text>
                         </TouchableOpacity>
 
@@ -63,7 +63,7 @@ export default function Contact({ navigation }) {
                             style={styles.contactRow}
                             onPress={() => openLink(`tel:${contactInfo.contact_phone}`)}
                         >
-                            <CustomIcon name="phone-alt" size={20} color="purple" />
+                            <CustomIcon name="phone-alt" size={20} color="#1A3067" />
                             <Text style={styles.contactText}>{contactInfo.contact_phone}</Text>
                         </TouchableOpacity>
 
@@ -72,7 +72,7 @@ export default function Contact({ navigation }) {
                             style={styles.contactRow}
                             onPress={() => openLink(`mailto:${contactInfo.contact_email}`)}
                         >
-                            <CustomIcon name="envelope" size={20} color="purple" />
+                            <CustomIcon name="envelope" size={20} color="#1A3067" />
                             <Text style={styles.contactText}>{contactInfo.contact_email}</Text>
                         </TouchableOpacity>
                         {/* Website */}
@@ -80,7 +80,7 @@ export default function Contact({ navigation }) {
                             style={styles.contactRow}
                             onPress={() => openLink('https://theorbit.one/')}
                         >
-                            <CustomIcon name="globe" size={20} color="purple" />
+                            <CustomIcon name="globe" size={20} color="#1A3067" />
                             <Text style={styles.contactText}>theorbit.one</Text>
                         </TouchableOpacity>
 
@@ -90,7 +90,7 @@ export default function Contact({ navigation }) {
                     </View>
                 ) : (
                     <View style={styles.loaderContainer}>
-                        <ActivityIndicator size="large" color="purple" />
+                        <ActivityIndicator size="large" color="#1A3067" />
                     </View>
                 )}
             </ScrollView>
@@ -103,17 +103,17 @@ export default function Contact({ navigation }) {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#fff' },
     header: {
-        paddingTop: 60,
+        paddingTop: 20,
         paddingBottom: 20,
         paddingHorizontal: 20,
         backgroundColor: '#f9f9f9',
         borderBottomWidth: 1,
         borderBottomColor: '#eee'
     },
-    headerText: { fontSize: 24, fontWeight: 'bold', color: 'purple' },
+    headerText: { fontSize: 24, fontWeight: 'bold', color: '#1A3067' },
     headerSubText: { fontSize: 13, color: '#666', marginTop: 4 },
     logoContainer: { flexDirection: 'row', alignItems: 'center' },
-    headerTitle: { fontSize: 20, fontWeight: 'bold', color: 'purple', marginLeft: 10 },
+    headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#1A3067', marginLeft: 10 },
     logo: { width: 40, height: 40, borderRadius: 20 },
     scrollContent: { alignItems: 'center', paddingBottom: 80,paddingTop:10 },
 
@@ -159,5 +159,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10, borderRadius: 20 },
+    backBtn: { position: 'absolute', top: 1, left: 20, zIndex: 10, borderRadius: 20 },
 });

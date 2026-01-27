@@ -65,7 +65,7 @@ export default function Advertisements() {
 
             {isLoading ? (
                 <View style={styles.loaderContainer}>
-                    <ActivityIndicator size="large" color="purple" />
+                    <ActivityIndicator size="large" color="#1A3067" />
                 </View>
             ) : (
                 <FlatList
@@ -95,14 +95,14 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     header: {
-        paddingTop: 60,
+        paddingTop: 25,
         paddingBottom: 20,
         paddingHorizontal: 20,
         backgroundColor: '#f9f9f9',
         borderBottomWidth: 1,
         borderBottomColor: '#eee'
     },
-    headerText: { fontSize: 24, fontWeight: 'bold', color: 'purple' },
+    headerText: { fontSize: 24, fontWeight: 'bold', color: '#1A3067' },
     headerSubText: { fontSize: 13, color: '#666', marginTop: 4 },
     listContent: {
         paddingHorizontal: 10,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     viewButton: {
         marginTop: 5,
         fontSize: 12,
-        color: 'purple',
+        color: '#1A3067',
         fontWeight: '600',
     },
     emptyText: {

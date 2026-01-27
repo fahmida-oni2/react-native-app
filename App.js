@@ -16,6 +16,7 @@ import DetailsServScreen from "./pages/ServiceDetails";
 import ContactScreen from "./pages/Contact";
 import CartScreen from "./pages/Order";
 import BlogScreen from "./pages/Blogs";
+import WelcomeScreen from "./pages/Welcome"
 import BlogDetailsScreen from "./pages/BlogDetails";
 import Form from "./pages/Form";
 import Toast from "react-native-toast-message";
@@ -98,6 +99,7 @@ export default function App() {
                   </>
                 ) : (
                   <>
+                  <Stack.Screen name="Welcome" component={WelcomeScreen} />
                     <Stack.Screen name="Login" component={LoginScreen} />
                     <Stack.Screen name="SignUp" component={SignUpScreen} />
                   </>

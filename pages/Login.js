@@ -12,13 +12,12 @@ import {
   TouchableWithoutFeedback,
   Keyboard
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context"; // Modern Safe Area
+import { SafeAreaView } from "react-native-safe-area-context"; 
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import * as LocalAuthentication from "expo-local-authentication";
 import * as SecureStore from "expo-secure-store";
-import Toast from "react-native-toast-message";
 import CustomIcon from "../components/CustomIcon";
 
 export default function Login() {
@@ -33,17 +32,8 @@ export default function Login() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
       if (userCredential.user) {
-        // Save for later biometric login
         await SecureStore.setItemAsync("user_email", email);
         await SecureStore.setItemAsync("user_password", password);
-        
-        // Toast.show({
-        //   type: "success",
-        //   text1: "Success",
-        //   text2: "Credentials saved for Biometrics",
-        //   visibilityTime: 1000,
-        //   autoHide: true,
-        // });
         Alert.alert("Success", "Credintial Saved for Biometrics!");
       }
     } catch (error) {
@@ -72,13 +62,6 @@ export default function Login() {
 
         if (storedEmail && storedPassword) {
           await signInWithEmailAndPassword(auth, storedEmail, storedPassword);
-        //   Toast.show({
-        //     type: "success",
-        //     text1: "Success",
-        //     text2: "Login with Biometric!",
-        //     visibilityTime: 1000,
-        //     autoHide: true,
-        //   });
         Alert.alert("Success", "Login with Biometric!");
         } else {
           Alert.alert("Notice", "Please login with password first to enable biometrics.");
@@ -105,8 +88,8 @@ export default function Login() {
 
               <TextInput
                 placeholder="Email"
-                placeholderTextColor="#999999" // Fixed for APK visibility
-                style={[styles.input, { color: '#000000' }]} // Fixed for APK visibility
+                placeholderTextColor="#999999" 
+                style={[styles.input, { color: '#000000' }]} 
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -116,8 +99,8 @@ export default function Login() {
               <View style={styles.passwordContainer}>
                 <TextInput
                   placeholder="Password"
-                  placeholderTextColor="#999999" // Fixed for APK visibility
-                  style={[styles.passwordInput, { color: '#000000' }]} // Fixed for APK visibility
+                  placeholderTextColor="#999999"
+                  style={[styles.passwordInput, { color: '#000000' }]}
                   secureTextEntry={!showPassword}
                   value={password}
                   onChangeText={setPassword}
@@ -142,8 +125,8 @@ export default function Login() {
                 onPress={handleBiometricAuth}
                 style={styles.biometricButton}
               >
-                <CustomIcon name="fingerprint" size={40} color="purple" />
-                <Text style={{ color: "purple", marginTop: 5 }}>Biometric Login</Text>
+                <CustomIcon name="fingerprint" size={40} color="#1A3067" />
+                <Text style={{ color: "#1A3067", marginTop: 5 }}>Biometric Login</Text>
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
@@ -175,7 +158,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 40,
     textAlign: "center",
-    color: "purple",
+    color: "#1A3067",
   },
   input: {
     borderBottomWidth: 1,
@@ -200,13 +183,13 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
-    backgroundColor: "purple",
+    backgroundColor: "#1A3067",
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
   },
   buttonText: { color: "#fff", fontSize: 18, fontWeight: "600" },
-  linkText: { color: "purple", textAlign: "center", marginTop: 20 },
+  linkText: { color: "#1A3067", textAlign: "center", marginTop: 20 },
   linkButton: { fontWeight: "bold" },
   biometricButton: {
     alignItems: "center",

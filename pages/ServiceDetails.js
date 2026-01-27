@@ -47,10 +47,10 @@ const styles = StyleSheet.create({
     fullImage: { width: '100%', height: 400, resizeMode: 'cover' },
     infoContainer: { padding: 20, borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: -30, backgroundColor: 'white' ,textAlign:'left'},
     title: { fontSize: 24, fontWeight: 'bold', color: '#333' },
-    price: { fontSize: 22, color: 'purple', fontWeight: 'bold', marginVertical: 10 },
+    price: { fontSize: 22, color: '#1A3067', fontWeight: 'bold', marginVertical: 10 },
     divider: { height: 1, backgroundColor: '#eee', marginVertical: 15 },
     label: { fontSize: 16, fontWeight: 'bold', color: '#555', marginBottom: 5 },
     description: { fontSize: 15, color: '#666', lineHeight: 22 ,textAlign:'justify'},
-    actionButton: { backgroundColor: 'purple', padding: 18, borderRadius: 15, marginTop: 20, alignItems: 'center' },
+    actionButton: { backgroundColor: '#1A3067', padding: 18, borderRadius: 15, marginTop: 20, alignItems: 'center' },
     actionButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 18 }
 });

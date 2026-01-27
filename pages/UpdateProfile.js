@@ -13,7 +13,6 @@ import * as ImagePicker from "expo-image-picker";
 import { auth } from "../firebaseConfig";
 import { updateProfile } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
-import Toast from "react-native-toast-message";
 import CustomIcon from "../components/CustomIcon";
 
 export default function UpdateProfile() {
@@ -35,31 +34,6 @@ export default function UpdateProfile() {
   };
 
   const removeImage = () => setPhotoURL("");
-
-  //   const handleUpdate = async () => {
-  //     try {
-  //       await updateProfile(auth.currentUser, {
-  //         displayName: name,
-  //         photoURL: photoURL || "",
-  //       });
-
-  //       Toast.show({
-  //         type: "success",
-  //         text1: "Success",
-  //         text2: "Profile updated successfully!",
-  //         visibilityTime: 1000,
-  //         autoHide: true,
-  //         onShow: () => {},
-  //         onHide: () => {},
-  //         props: {
-  //           duration: 1000,
-  //         },
-  //       });
-  //       navigation.goBack();
-  //     } catch (error) {
-  //       Alert.alert("Error", error.message);
-  //     }
-  //   };
   const handleUpdate = async () => {
     if (!name.trim()) {
       Alert.alert("Error", "Name cannot be empty");
@@ -72,13 +46,6 @@ export default function UpdateProfile() {
         photoURL: photoURL || "",
       });
 
-    //   Toast.show({
-    //     type: "success",
-    //     text1: "Success",
-    //     text2: "Profile updated successfully!",
-    //     visibilityTime: 1000,
-    //     autoHide: true,
-    //   });
       Alert.alert("Success", "Profile Updated Successfully");
 
       setTimeout(() => {
@@ -104,7 +71,7 @@ export default function UpdateProfile() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
-          <CustomIcon name="arrow-left" size={30} color="purple" />
+          <CustomIcon name="arrow-left" size={30} color="#1A3067" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Update Profile</Text>
         <Text style={styles.headerSubText}>
@@ -123,7 +90,7 @@ export default function UpdateProfile() {
                 <Image source={{ uri: photoURL }} style={styles.profileImage} />
               ) : (
                 <View style={styles.iconCircle}>
-                  <CustomIcon name="user" size={40} color="purple" />
+                  <CustomIcon name="user" size={40} color="#1A3067" />
                 </View>
               )}
             </TouchableOpacity>
@@ -165,18 +132,18 @@ export default function UpdateProfile() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
   header: {
-    paddingTop: 60,
+    paddingTop: 25,
     paddingBottom: 20,
     paddingHorizontal: 20,
     backgroundColor: "#f9f9f9",
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
   },
-  headerText: { fontSize: 24, fontWeight: "bold", color: "purple" },
+  headerText: { fontSize: 24, fontWeight: "bold", color: "#1A3067" },
   headerSubText: { fontSize: 13, color: "#666", marginTop: 4 },
   backBtn: {
     position: "absolute",
-    top: 30,
+    top: 1,
     left: 20,
     zIndex: 10,
     borderRadius: 20,
@@ -192,7 +159,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
   },
-  label: { color: "purple", fontSize: 14, marginBottom: 8, fontWeight: "600" },
+  label: { color: "#1A3067", fontSize: 14, marginBottom: 8, fontWeight: "600" },
   input: {
     backgroundColor: "#fcfcfc",
     borderWidth: 1,
@@ -204,12 +171,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   saveButton: {
-    backgroundColor: "purple",
+    backgroundColor: "#1A3067",
     padding: 16,
     borderRadius: 12,
     alignItems: "center",
     marginTop: 10,
-    shadowColor: "purple",
+    shadowColor: "#1A3067",
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
@@ -225,7 +192,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
     borderWidth: 2,
-    borderColor: "purple",
+    borderColor: "#1A3067",
   },
   profileImage: { width: "100%", height: "100%" },
   iconCircle: {
@@ -235,5 +202,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageActionRow: { flexDirection: "row", marginTop: 10 },
-  imageHint: { fontSize: 14, color: "purple", fontWeight: "600" },
+  imageHint: { fontSize: 14, color: "#1A3067", fontWeight: "600" },
 });

@@ -14,7 +14,7 @@ export default function Product({navigation}) {
     return (
         <View style={styles.screenWrapper}>
             <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
-                <CustomIcon name="arrow-left" size={30} color="purple" />
+                <CustomIcon name="arrow-left" size={30} color="#1A3067" />
             </TouchableOpacity>
             <View style={styles.content}>
                 <Advertisements />
@@ -33,5 +33,5 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
     },
-    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10,  borderRadius: 20 },
+    backBtn: { position: 'absolute', top: 1, left: 20, zIndex: 10,  borderRadius: 20 },
 });

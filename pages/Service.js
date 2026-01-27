@@ -60,16 +60,16 @@ export default function Service({ navigation }) {
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-                <CustomIcon name="arrow-left" size={30} color="purple" />
+                <CustomIcon name="arrow-left" size={30} color="#1A3067" />
             </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Services Portfolio</Text>
-                <Text style={styles.headerSubText}>Comprehensive services designed to optimize your operations</Text>
+                <Text style={styles.headerSubText}>Premium service solutions</Text>
             </View>
 
             {loading ? (
                 <View style={styles.loaderContainer}>
-                    <ActivityIndicator size="large" color="purple" />
+                    <ActivityIndicator size="large" color="#1A3067" />
                 </View>
             ) : (
                 <FlatList
@@ -93,14 +93,14 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#fff' },
     loaderContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     header: {
-        paddingTop: 60,
+        paddingTop: 25,
         paddingBottom: 20,
         paddingHorizontal: 20,
         backgroundColor: '#f9f9f9',
         borderBottomWidth: 1,
         borderBottomColor: '#eee'
     },
-    headerText: { fontSize: 24, fontWeight: 'bold', color: 'purple' },
+    headerText: { fontSize: 24, fontWeight: 'bold', color: '#1A3067' },
     headerSubText: { fontSize: 13, color: '#666', marginTop: 4 },
     listContent: {
         paddingHorizontal: 10,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     viewButton: {
         marginTop: 5,
         fontSize: 12,
-        color: 'purple',
+        color: '#1A3067',
         fontWeight: '600',
     },
     emptyText: {
@@ -154,5 +154,5 @@ const styles = StyleSheet.create({
         marginTop: 50,
         color: '#666',
     },
-    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10, borderRadius: 20 },
+    backBtn: { position: 'absolute', top: 1, left: 20, zIndex: 10, borderRadius: 20 },
 });

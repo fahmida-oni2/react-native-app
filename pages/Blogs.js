@@ -54,7 +54,7 @@ export default function Blogs({ navigation }) {
                     </Text>
                     <View style={styles.readMoreRow}>
                         <Text style={styles.viewButton}>Read More</Text>
-                        <CustomIcon name="chevron-right" size={10} color="purple" />
+                        <CustomIcon name="chevron-right" size={10} color="#1A3067" />
                     </View>
                 </View>
             </View>
@@ -64,7 +64,7 @@ export default function Blogs({ navigation }) {
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-                <CustomIcon name="arrow-left" size={30} color="purple" />
+                <CustomIcon name="arrow-left" size={30} color="#1A3067" />
             </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Industry Insights</Text>
@@ -73,7 +73,7 @@ export default function Blogs({ navigation }) {
 
             {loading ? (
                 <View style={styles.loaderContainer}>
-                    <ActivityIndicator size="large" color="purple" />
+                    <ActivityIndicator size="large" color="#1A3067" />
                 </View>
             ) : (
                 <FlatList
@@ -103,14 +103,14 @@ export default function Blogs({ navigation }) {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#fff' },
     header: {
-        paddingTop: 60,
+        paddingTop: 20,
         paddingBottom: 20,
         paddingHorizontal: 20,
         backgroundColor: '#f9f9f9',
         borderBottomWidth: 1,
         borderBottomColor: '#eee'
     },
-    headerText: { fontSize: 24, fontWeight: 'bold', color: 'purple' },
+    headerText: { fontSize: 24, fontWeight: 'bold', color: '#1A3067' },
     headerSubText: { fontSize: 13, color: '#666', marginTop: 4 },
     listContent: {
         paddingHorizontal: 10,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     categoryTag: {
         fontSize: 10,
         fontWeight: 'bold',
-        color: 'purple',
+        color: '#1A3067',
         textTransform: 'uppercase',
         marginBottom: 5
     },
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     },
     viewButton: {
         fontSize: 11,
-        color: 'purple',
+        color: '#1A3067',
         fontWeight: '700',
         marginRight: 2
     },
@@ -179,5 +179,5 @@ const styles = StyleSheet.create({
         color: '#999',
         fontSize: 14,
     },
-    backBtn: { position: 'absolute', top: 30, left: 20, zIndex: 10, borderRadius: 20 },
+    backBtn: { position: 'absolute', top: 1, left: 20, zIndex: 10, borderRadius: 20 },
 });
