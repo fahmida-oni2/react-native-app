@@ -5,6 +5,6 @@ const config = getDefaultConfig(__dirname);
 
 
 config.resolver.sourceExts.push('cjs');
-
+config.resolver.unstable_conditionNames = ['browser', 'require', 'react-native'];
 
 module.exports = withNativeWind(config, { input: './global.css' });

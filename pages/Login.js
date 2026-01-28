@@ -78,13 +78,13 @@ export default function Login() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <WrapperComponent onPress={Keyboard.dismiss}>
           <ScrollView 
             contentContainerStyle={styles.scrollContainer}
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.container}>
-              <Text style={styles.title}>Welcome</Text>
+              <Text style={styles.title}>Login Now</Text>
 
               <TextInput
                 placeholder="Email"
@@ -136,12 +136,17 @@ export default function Login() {
               </TouchableOpacity>
             </View>
           </ScrollView>
-        </TouchableWithoutFeedback>
+        </WrapperComponent>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
+
+const WrapperComponent = ({ children, onPress }) => {
+  if (Platform.OS === 'web') return <View style={{ flex: 1 }}>{children}</View>;
+  return <TouchableWithoutFeedback onPress={onPress} style={{ flex: 1 }}>{children}</TouchableWithoutFeedback>;
+};
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,

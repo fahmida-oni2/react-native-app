@@ -7,6 +7,11 @@
     "icon": "./assets/orbitLogo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/orbitLogo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -15,41 +20,36 @@
       "bundleIdentifier": "com.orbitmedia.app",
       "infoPlist": {
         "NSFaceIDUsageDescription": "This app uses FaceID to log you in securely.",
-        "LSApplicationQueriesSchemes": [
-          "mailto"
-        ],
+        "LSApplicationQueriesSchemes": ["mailto"],
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
+      "package": "com.orbitmedia.app",
+      "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/bg.png",
+        "foregroundImage": "./assets/orbitLogo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.orbitmedia.app",
       "permissions": [
         "android.permission.USE_BIOMETRIC",
         "android.permission.USE_FINGERPRINT",
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
-      ],
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "data": {
-            "scheme": "mailto"
-          }
-        }
       ]
     },
-    "web": {
-      "favicon": "./assets/orbitLogo.png"
-    },
+    
+  "web": {
+  "bundler": "metro",
+  "output": "single" 
+},
+  
     "plugins": [
       "expo-asset",
       "expo-font",
       "expo-secure-store",
       "expo-local-authentication",
+      "expo-dev-client",
       [
         "expo-image-picker",
         {
@@ -62,14 +62,13 @@
         {
           "ios": {
             "useFrameworks": "static"
+          },
+          "android": {
+            "extraMavenRepos": ["../../node_modules/react-native-mmkv/android"]
           }
         }
       ]
     ],
-    "experiments": {
-      "tsconfigPaths": true,
-      "typedRoutes": true
-    },
     "extra": {
       "eas": {
         "projectId": "55c0b7ce-2ef4-432f-a9d7-f5e9de9fde40"
