@@ -20,7 +20,9 @@
       "bundleIdentifier": "com.orbitmedia.app",
       "infoPlist": {
         "NSFaceIDUsageDescription": "This app uses FaceID to log you in securely.",
-        "LSApplicationQueriesSchemes": ["mailto"],
+        "LSApplicationQueriesSchemes": [
+          "mailto"
+        ],
         "ITSAppUsesNonExemptEncryption": false
       }
     },
@@ -38,12 +40,10 @@
         "android.permission.RECORD_AUDIO"
       ]
     },
-    
-  "web": {
-  "bundler": "metro",
-  "output": "single" 
-},
-  
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
     "plugins": [
       "expo-asset",
       "expo-font",
@@ -64,16 +64,18 @@
             "useFrameworks": "static"
           },
           "android": {
-            "extraMavenRepos": ["../../node_modules/react-native-mmkv/android"]
+            "extraMavenRepos": [
+              "../../node_modules/react-native-mmkv/android"
+            ]
           }
         }
       ]
     ],
     "extra": {
       "eas": {
-        "projectId": "55c0b7ce-2ef4-432f-a9d7-f5e9de9fde40"
+        "projectId": "2aef075c-2544-4fe6-9448-ce8815849053"
       }
     },
-    "owner": "fahmidaorbit"
+    "owner": "orbitmedia"
   }
 }

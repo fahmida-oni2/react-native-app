@@ -89,7 +89,7 @@ export default function ProductDetails({ route, navigation }) {
           <Text style={styles.label}>Product Description</Text>
           <Text style={styles.description}>{product.banner_description}</Text>
 
-          <TouchableOpacity style={styles.buyNow} onPress={handleAddToCart}>
+          <TouchableOpacity style={styles.buyNow} onPress={() => navigation.navigate('Form')}>
             <Text style={styles.buyNowText}>Order Now</Text>
           </TouchableOpacity>
         </View>

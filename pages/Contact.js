@@ -95,7 +95,7 @@ export default function Contact({ navigation }) {
                 )}
             </ScrollView>
 
-            <Navbar />
+    
         </View>
     );
 }

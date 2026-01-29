@@ -5,14 +5,14 @@ export default function Welcome({ navigation }) {
   
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate("Login");
+      navigation.navigate("Home");
     }, 2000);
 
     return () => clearTimeout(timer);
   }, [navigation]);
 
   const handleManualNavigate = () => {
-    navigation.navigate("Login");
+    navigation.navigate("Home");
   };
 
   return (

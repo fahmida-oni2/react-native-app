@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { auth } from "../firebaseConfig";
-import { updateProfile } from "firebase/auth";
+import { updateProfile, reload } from "firebase/auth"; // 1. Added reload
 import { useNavigation } from "@react-navigation/native";
 import CustomIcon from "../components/CustomIcon";
 
@@ -34,6 +34,7 @@ export default function UpdateProfile() {
   };
 
   const removeImage = () => setPhotoURL("");
+
   const handleUpdate = async () => {
     if (!name.trim()) {
       Alert.alert("Error", "Name cannot be empty");
@@ -45,6 +46,8 @@ export default function UpdateProfile() {
         displayName: name,
         photoURL: photoURL || "",
       });
+
+      await reload(auth.currentUser);
 
       Alert.alert("Success", "Profile Updated Successfully");
 
@@ -67,6 +70,7 @@ export default function UpdateProfile() {
       navigation.navigate("Home");
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -128,6 +132,7 @@ export default function UpdateProfile() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },

@@ -49,6 +49,7 @@ export default function Form({ navigation }) {
     return (
         <View style={styles.container}>
 
+
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
                     <CustomIcon name="arrow-left" size={30} color="#1A3067" />

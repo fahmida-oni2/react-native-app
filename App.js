@@ -23,6 +23,7 @@ import Toast from "react-native-toast-message";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { LogBox } from "react-native";
+import ProfileScreen from "./pages/Profile";
 SplashScreen.preventAutoHideAsync();
 LogBox.ignoreLogs([
   "Warning: TRenderEngineProvider: Support for defaultProps",
@@ -47,7 +48,6 @@ export default function App() {
       setUser(user);
       setLoading(false);
     });
-
     return unsubscribe;
   }, []);
 
@@ -57,69 +57,44 @@ export default function App() {
     }
   }, [fontsLoaded, fontError]);
 
+  if (loading || (!fontsLoaded && !fontError)) return null;
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError])
-
-  if (loading || (!fontsLoaded && !fontError)) {
-    return null;
-  }
   return (
-    <>
-      <SafeAreaProvider onLayout={onLayoutRootView}>
-        <SafeAreaView style={styles.container}>
-          <NavigationContainer>
-            <View style={styles.mainContainer}>
-              <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {user ? (
-                  <>
-                    <Stack.Screen name="Home" component={HomeScreen} />
-                    <Stack.Screen name="Product" component={ProductScreen} />
-                    <Stack.Screen name="Service" component={ServiceScreen} />
-                    <Stack.Screen
-                      name="UpdateProfile"
-                      component={UpdateScreen}
-                    />
-                    <Stack.Screen
-                      name="ProductDetails"
-                      component={DetailsScreen}
-                    />
-                    <Stack.Screen
-                      name="ServiceDetails"
-                      component={DetailsServScreen}
-                    />
-                    <Stack.Screen name="Order" component={CartScreen} />
-                    <Stack.Screen name="Contact" component={ContactScreen} />
-                    <Stack.Screen name="Blogs" component={BlogScreen} />
-                    <Stack.Screen
-                      name="BlogDetails"
-                      component={BlogDetailsScreen}
-                    />
-                    <Stack.Screen name="Form" component={Form} />
-                  </>
-                ) : (
-                  <>
-                  <Stack.Screen name="Welcome" component={WelcomeScreen} />
-                    <Stack.Screen name="Login" component={LoginScreen} />
-                    <Stack.Screen name="SignUp" component={SignUpScreen} />
-                  </>
-                )}
-              </Stack.Navigator>
-            </View>
-          </NavigationContainer>
-        </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <NavigationContainer>
+          <View style={styles.mainContainer}>
+            <Stack.Navigator 
+              initialRouteName="Welcome" 
+              screenOptions={{ headerShown: false }}
+            >
+              {/* Common Screens available to everyone */}
+              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen name="Product" component={ProductScreen} />
+              <Stack.Screen name="Service" component={ServiceScreen} />
+              <Stack.Screen name="ProductDetails" component={DetailsScreen} />
+              <Stack.Screen name="ServiceDetails" component={DetailsServScreen} />
+              <Stack.Screen name="Blogs" component={BlogScreen} />
+              <Stack.Screen name="BlogDetails" component={BlogDetailsScreen} />
+              <Stack.Screen name="Contact" component={ContactScreen} />
+              
+              {/* Auth Screens */}
+              <Stack.Screen name="Welcome" component={WelcomeScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="SignUp" component={SignUpScreen} />
 
-        <Toast
-          topOffset={60}
-          visibilityTime={1000}
-          autoHide={true}
-          onPress={() => Toast.hide()}
-        />
-      </SafeAreaProvider>
-    </>
+              {/* Private Screens */}
+              <Stack.Screen name="UpdateProfile" component={UpdateScreen} />
+              <Stack.Screen name="Order" component={CartScreen} />
+              <Stack.Screen name="Form" component={Form} />
+            </Stack.Navigator>
+          </View>
+        </NavigationContainer>
+      </SafeAreaView>
+
+      <Toast topOffset={60} visibilityTime={1000} />
+    </SafeAreaProvider>
   );
 }
 

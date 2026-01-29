@@ -16,80 +16,61 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
-import * as LocalAuthentication from "expo-local-authentication";
-import * as SecureStore from "expo-secure-store";
 import CustomIcon from "../components/CustomIcon";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please enter both email and password.");
+      return;
+    }
+
+    setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
       if (userCredential.user) {
-        await SecureStore.setItemAsync("user_email", email);
-        await SecureStore.setItemAsync("user_password", password);
-        Alert.alert("Success", "Credintial Saved for Biometrics!");
+        navigation.navigate("Profile");
       }
     } catch (error) {
       Alert.alert("Login Error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleBiometricAuth = async () => {
-    try {
-      const hasHardware = await LocalAuthentication.hasHardwareAsync();
-      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-
-      if (!hasHardware || !isEnrolled) {
-        Alert.alert("Error", "Biometrics not supported or set up on this device.");
-        return;
-      }
-
-      const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: "Login with Biometrics",
-        fallbackLabel: "Use Password",
-      });
-
-      if (result.success) {
-        const storedEmail = await SecureStore.getItemAsync("user_email");
-        const storedPassword = await SecureStore.getItemAsync("user_password");
-
-        if (storedEmail && storedPassword) {
-          await signInWithEmailAndPassword(auth, storedEmail, storedPassword);
-        Alert.alert("Success", "Login with Biometric!");
-        } else {
-          Alert.alert("Notice", "Please login with password first to enable biometrics.");
-        }
-      }
-    } catch (error) {
-      console.error(error);
+    const handleSafeBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate("Home");
     }
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <TouchableOpacity style={styles.backBtn} onPress={handleSafeBack}>
+          <CustomIcon name="arrow-left" size={30} color="#1A3067" />
+        </TouchableOpacity>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <WrapperComponent onPress={Keyboard.dismiss}>
-          <ScrollView 
-            contentContainerStyle={styles.scrollContainer}
-            showsVerticalScrollIndicator={false}
-          >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
               <Text style={styles.title}>Login Now</Text>
 
               <TextInput
                 placeholder="Email"
-                placeholderTextColor="#999999" 
-                style={[styles.input, { color: '#000000' }]} 
+                placeholderTextColor="#999" 
+                style={styles.input} 
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -99,34 +80,23 @@ export default function Login() {
               <View style={styles.passwordContainer}>
                 <TextInput
                   placeholder="Password"
-                  placeholderTextColor="#999999"
-                  style={[styles.passwordInput, { color: '#000000' }]}
+                  placeholderTextColor="#999"
+                  style={styles.passwordInput}
                   secureTextEntry={!showPassword}
                   value={password}
                   onChangeText={setPassword}
                 />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.eyeIcon}
-                >
-                  <CustomIcon
-                    name={showPassword ? "eye-slash" : "eye"}
-                    size={20}
-                    color="gray"
-                  />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <CustomIcon name={showPassword ? "eye-slash" : "eye"} size={20} color="gray" />
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Login</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={handleBiometricAuth}
-                style={styles.biometricButton}
+              <TouchableOpacity 
+                style={[styles.button, loading && { opacity: 0.7 }]} 
+                onPress={handleLogin}
+                disabled={loading}
               >
-                <CustomIcon name="fingerprint" size={40} color="#1A3067" />
-                <Text style={{ color: "#1A3067", marginTop: 5 }}>Biometric Login</Text>
+                <Text style={styles.buttonText}>{loading ? "Logging in..." : "Login"}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
@@ -136,69 +106,28 @@ export default function Login() {
               </TouchableOpacity>
             </View>
           </ScrollView>
-        </WrapperComponent>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
-
-const WrapperComponent = ({ children, onPress }) => {
-  if (Platform.OS === 'web') return <View style={{ flex: 1 }}>{children}</View>;
-  return <TouchableWithoutFeedback onPress={onPress} style={{ flex: 1 }}>{children}</TouchableWithoutFeedback>;
-};
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-    backgroundColor: "#fff",
-    minHeight: '100%',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginBottom: 40,
-    textAlign: "center",
-    color: "#1A3067",
-  },
-  input: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    marginBottom: 20,
-    padding: 10,
-    fontSize: 16,
-  },
-  passwordContainer: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    marginBottom: 20,
-    alignItems: "center",
-  },
-  passwordInput: {
-    flex: 1,
-    padding: 10,
-    fontSize: 16,
-  },
-  eyeIcon: {
-    padding: 10,
-  },
-  button: {
-    backgroundColor: "#1A3067",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-  },
+  scrollContainer: { flexGrow: 1 },
+  container: { flex: 1, justifyContent: "center", padding: 20, backgroundColor: "#fff" },
+  title: { fontSize: 32, fontWeight: "bold", marginBottom: 40, textAlign: "center", color: "#1A3067" },
+  input: { borderBottomWidth: 1, borderBottomColor: "#ccc", marginBottom: 20, padding: 10, fontSize: 16, color: '#000' },
+  passwordContainer: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#ccc", marginBottom: 30, alignItems: "center" },
+  passwordInput: { flex: 1, padding: 10, fontSize: 16, color: '#000' },
+  button: { backgroundColor: "#1A3067", padding: 15, borderRadius: 8, alignItems: "center" },
   buttonText: { color: "#fff", fontSize: 18, fontWeight: "600" },
   linkText: { color: "#1A3067", textAlign: "center", marginTop: 20 },
   linkButton: { fontWeight: "bold" },
-  biometricButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
+    backBtn: {
+    position: "absolute",
+    top: 1,
+    left: 20,
+    zIndex: 10,
+    borderRadius: 20,
   },
 });

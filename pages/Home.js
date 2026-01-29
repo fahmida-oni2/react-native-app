@@ -5,260 +5,209 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Alert,
-  Modal,
   ActivityIndicator,
   FlatList,
   Dimensions,
   RefreshControl,
-  Platform,
+  TextInput,
+  ScrollView,
+  Linking,
+  Alert,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import { auth } from "../firebaseConfig";
-import { signOut } from "firebase/auth";
 import Navbar from "../components/Navbar";
-import ProductMarquee from "../components/ProductMarquee";
-import ServiceMarquee from "../components/ServiceMarquee";
 import CustomIcon from "../components/CustomIcon";
 import useStore from "../store/useStore";
+import { auth } from "../firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 const { width } = Dimensions.get("window");
 
 export default function Home({ navigation }) {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [displayName, setDisplayName] = useState(auth.currentUser?.displayName);
-  const [photoURL, setPhotoURL] = useState(auth.currentUser?.photoURL);
-  const [activeTab, setActiveTab] = useState("All");
   const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("All");
+  const [userName, setUserName] = useState("Guest"); // State for immediate name update
   const BASE_URL = "https://theorbit.one/";
 
-  // Pull everything from the store
-  const { 
-    products, 
-    services, 
-    blogs, 
-    allData, 
-    loading, 
-    fetchHomeData, 
-    _hasHydrated 
-  } = useStore();
+  const { allData, loading, fetchHomeData, _hasHydrated, blogs } = useStore();
 
+  // 1. LISTEN FOR USER CHANGES (Updates name immediately after login)
+ // Inside your Home component
+useEffect(() => {
+  const unsubscribe = navigation.addListener('focus', () => {
+    // This runs every time you return to Home
+    setUserName(auth.currentUser?.displayName || "Guest");
+  });
+
+  return unsubscribe;
+}, [navigation]);
   useEffect(() => {
     if (_hasHydrated && allData.length === 0) {
       fetchHomeData();
     }
-  }, [_hasHydrated]); 
-
-  const filteredItems = useMemo(() => {
-    return activeTab === "All"
-      ? allData
-      : allData.filter((item) => item.type === activeTab);
-  }, [activeTab, allData]);
-
-  useFocusEffect(
-    useCallback(() => {
-      setDisplayName(auth.currentUser?.displayName);
-      setPhotoURL(auth.currentUser?.photoURL);
-    }, []),
-  );
-
-  const handleLogout = () => {
-    setModalVisible(false);
-    if (Platform.OS === "web") {
-      const confirmed = window.confirm("Are you sure you want to sign out?");
-      if (confirmed) signOut(auth).catch((err) => console.log(err));
-    } else {
-      Alert.alert("Logout", "Are you sure you want to sign out?", [
-        { text: "Cancel", style: "cancel" },
-        { text: "Logout", onPress: () => signOut(auth).catch((err) => console.log(err)) },
-      ]);
-    }
-  };
+  }, [_hasHydrated]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await fetchHomeData(); 
+    await fetchHomeData();
     setRefreshing(false);
   }, [fetchHomeData]);
+
+  const filteredItems = useMemo(() => {
+    let data = allData;
+    if (searchQuery.trim()) {
+      return data.filter(
+        (item) =>
+          item.displayTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.type?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    if (activeTab !== "All") {
+      data = data.filter((item) => item.type === activeTab);
+    }
+    return data;
+  }, [searchQuery, activeTab, allData]);
+
+  const handleEmergencyCall = () => {
+    const phoneNumber = "tel:00447935390848";
+    Linking.canOpenURL(phoneNumber).then((supported) => {
+      if (supported) Linking.openURL(phoneNumber);
+      else Alert.alert("Error", "Phone calls not supported");
+    });
+  };
+
+  const getHeroIcon = (title, type) => {
+    const t = title.toLowerCase();
+    if (t.includes("erp") || t.includes("management")) return "layer-group";
+    if (t.includes("pos") || t.includes("shop")) return "layer-group";
+    if (t.includes("web") || t.includes("code")) return "concierge-bell";
+    if (t.includes("app") || t.includes("mobile")) return "concierge-bell";
+    return type === "Products" ? "boxes" : "concierge-bell";
+  };
 
   const renderBlogItem = ({ item }) => (
     <TouchableOpacity
       style={styles.blogCard}
       onPress={() => navigation.navigate("BlogDetails", { blog: item })}
     >
-      <Image
-        source={{ uri: `${BASE_URL}${item.banner_image}` }}
-        style={styles.blogImage}
-        resizeMode="cover"
-      />
+      <Image source={{ uri: `${BASE_URL}${item.banner_image}` }} style={styles.blogImage} />
       <View style={styles.blogInfo}>
-        <Text style={styles.blogTag}>Article</Text>
         <Text style={styles.blogTitle} numberOfLines={2}>{item.blog_title}</Text>
-        <View style={styles.blogFooter}>
-          <Text style={styles.blogReadMore}>Read Post</Text>
-          <CustomIcon name="arrow-right" size={14} color="#1A3067" type="Solid" />
-        </View>
+        <Text style={styles.blogReadMore}>Read Post →</Text>
       </View>
     </TouchableOpacity>
   );
 
-  const renderCard = useCallback(({ item }) => (
+  const renderCard = ({ item }) => (
     <TouchableOpacity
       style={styles.itemCard}
-      onPress={() =>
-        navigation.navigate(
-          item.type === "Products" ? "ProductDetails" : "ServiceDetails",
-          { service: item, product: item }
-        )
-      }
+      onPress={() => navigation.navigate(item.type === "Products" ? "ProductDetails" : "ServiceDetails", { [item.type === "Products" ? "product" : "service"]: item })}
     >
       <Image source={{ uri: `${BASE_URL}${item.displayImage}` }} style={styles.cardImage} />
       <View style={styles.cardInfo}>
         <View style={[styles.typeBadge, { backgroundColor: item.type === "Products" ? "#6200EE" : "#03DAC6" }]}>
           <Text style={styles.typeText}>{item.type === "Products" ? "PRODUCT" : "SERVICE"}</Text>
         </View>
-        <Text style={styles.cardTitle} numberOfLines={2}>{item.displayTitle}</Text>
-        <View style={styles.cardFooter}>
-          <Text style={styles.viewText}>View Details</Text>
-          <CustomIcon name="chevron-right" size={12} color="#1A3067" />
-        </View>
+        <Text style={styles.cardTitle} numberOfLines={1}>{item.displayTitle}</Text>
       </View>
     </TouchableOpacity>
-  ), [navigation]);
+  );
 
+  // HEADER
   const renderHeader = () => (
-    <View>
-      <View style={styles.connectContainer}>
-        <View style={styles.connectCard}>
-          <View style={styles.connectTextContainer}>
-            <Text style={styles.connectSubtitle}>Ready to grow?</Text>
-            <Text style={styles.connectTitle}>Connect with us to get premium services</Text>
-            <TouchableOpacity style={styles.connectBtn} onPress={() => navigation.navigate("Form")}>
-              <Text style={styles.connectBtnText}>Connect Now</Text>
-              <CustomIcon name="arrow-right" size={16} color="#1A3067" />
-            </TouchableOpacity>
+    <View style={styles.headerContent}>
+      {!searchQuery && (
+        <>
+          <View style={styles.quickAccessWrapper}>
+            <Text style={styles.miniSectionTitle}>Quick Access</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.quickAccessContainer}>
+              {allData.map((item) => (
+                <TouchableOpacity key={item.uniqueKey} style={styles.miniButton} onPress={() => navigation.navigate(item.type === "Products" ? "ProductDetails" : "ServiceDetails", { [item.type === "Products" ? "product" : "service"]: item })}>
+                  <View style={[styles.miniIconCircle, { backgroundColor: item.type === "Products" ? "#F0F3FF" : "#F8F0FF" }]}>
+                    <CustomIcon name={getHeroIcon(item.displayTitle, item.type)} size={20} color={item.type === "Products" ? "#1A3067" : "#6200EE"} />
+                  </View>
+                  <Text style={styles.miniButtonLabel} numberOfLines={1}>{item.displayTitle.split(" ")[0]}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
-        </View>
-      </View>
 
-      <View style={styles.sectionHeaderRow}>
-        <Text style={styles.sectionTitle}>Latest Insights</Text>
-        <Text style={styles.seeAllText} onPress={() => navigation.navigate("Blogs")}>See All</Text>
-      </View>
-      <FlatList
-        data={blogs}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => `blog-${item.id}`}
-        renderItem={renderBlogItem}
-        contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}
-      />
+          {blogs.length > 0 && (
+            <>
+              <View style={styles.sectionHeaderRow}>
+                <Text style={styles.sectionTitle}>Latest Insights</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Blogs")}><Text style={styles.seeAllText}>See All</Text></TouchableOpacity>
+              </View>
+              <FlatList data={blogs} horizontal renderItem={renderBlogItem} keyExtractor={(item) => `blog-${item.id}`} contentContainerStyle={{ paddingLeft: 20 }} showsHorizontalScrollIndicator={false} />
+            </>
+          )}
 
-      <View style={styles.sectionHeaderRow}>
-        <Text style={styles.sectionTitle}>Featured Systems</Text>
-        <Text style={styles.seeAllText} onPress={() => navigation.navigate("Product")}>See All</Text>
-      </View>
-      <ProductMarquee data={products} />
-
-      <View style={styles.sectionHeaderRow}>
-        <Text style={styles.sectionTitle}>Service Portfolio</Text>
-        <Text style={styles.seeAllText} onPress={() => navigation.navigate("Service")}>See All</Text>
-      </View>
-      <ServiceMarquee data={services} />
-
-      <View style={styles.filterContainer}>
-        {["All", "Products", "Services"].map((tab) => (
-          <TouchableOpacity
-            key={tab}
-            onPress={() => setActiveTab(tab)}
-            style={[styles.filterBtn, activeTab === tab && styles.filterBtnActive]}
-          >
-            <Text style={[styles.filterText, activeTab === tab && styles.filterTextActive]}>{tab}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+          <View style={styles.sectionHeaderRow}><Text style={styles.sectionTitle}>Featured Solutions</Text></View>
+          <View style={styles.filterContainer}>
+            {["All", "Products", "Services"].map((tab) => (
+              <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} style={[styles.filterBtn, activeTab === tab && styles.filterBtnActive]}>
+                <Text style={[styles.filterText, activeTab === tab && styles.filterTextActive]}>{tab}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </>
+      )}
+      {searchQuery ? (
+        <View style={styles.sectionHeaderRow}><Text style={styles.sectionTitle}>Search Results</Text></View>
+      ) : null}
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <Image source={require("../assets/orbitLogo.png")} style={styles.logo} />
-          <View>
-            <Text style={styles.headerBrand}>Orbit Media</Text>
-            <Text style={styles.headerSubBrand}>Solutions</Text>
-          </View>
-        </View>
-
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          {photoURL ? (
-            <Image
-              key={photoURL}
-              source={{ uri: photoURL }}
-              style={{ width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: "#1A3067" }}
-            />
-          ) : (
-            <View style={{ backgroundColor: "#1A3067", width: 40, height: 40, borderRadius: 20, justifyContent: "center", alignItems: "center" }}>
-              <CustomIcon name="user-circle" size={20} color="white" />
-            </View>
+      <View style={styles.welcomeSection}>
+        <Text style={styles.greetingText}>Hello {userName}</Text>
+        <Text style={styles.subGreeting}>How can Orbit help your business today?</Text>
+        <View style={styles.searchBarContainer}>
+          <CustomIcon name="search" size={18} color="#999" />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search for ERP, POS, or Web Dev..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholderTextColor="#999"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
+              <CustomIcon name="times-circle" size={18} color="#ccc" />
+            </TouchableOpacity>
           )}
-        </TouchableOpacity>
+        </View>
       </View>
 
       {loading && allData.length === 0 ? (
-        <ActivityIndicator color="#1A3067" size="large" style={{ marginTop: 50 }} />
+        <View style={styles.loaderContainer}><ActivityIndicator size="large" color="#1A3067" /></View>
       ) : (
         <FlatList
           data={filteredItems}
           renderItem={renderCard}
           keyExtractor={(item) => item.uniqueKey}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#1A3067" colors={["#1A3067"]} />
-          }
-          numColumns={2}
+          extraData={[activeTab, searchQuery]}
           ListHeaderComponent={renderHeader}
+          numColumns={2}
+          keyboardShouldPersistTaps="handled"
           columnWrapperStyle={styles.row}
-          contentContainerStyle={styles.flatListContainer}
-          ListEmptyComponent={<Text style={styles.emptyText}>No {activeTab} available.</Text>}
-          ListFooterComponent={<View style={{ height: 120 }} />}
-          showsVerticalScrollIndicator={false}
-          removeClippedSubviews={Platform.OS === 'android'} 
-          initialNumToRender={8}
-          maxToRenderPerBatch={10}
-          windowSize={5}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          contentContainerStyle={{ paddingBottom: 150 }}
+          ListEmptyComponent={<Text style={styles.emptyText}>No matches found.</Text>}
         />
       )}
 
-
-      <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
-        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPressOut={() => setModalVisible(false)}>
-            <View style={styles.modalContent}>
-                <View style={styles.profileHeader}>
-                    {photoURL ? (
-                        <Image source={{ uri: photoURL }} style={{ width: 60, height: 60, borderRadius: 30, marginBottom: 10 }} />
-                    ) : (
-                        <CustomIcon name="user-circle" size={60} color="#1A3067" />
-                    )}
-                    <Text style={styles.profileName}>{displayName || "No Name Set"}</Text>
-                    <Text style={styles.profileEmail}>{auth.currentUser?.email}</Text>
-                </View>
-                <View style={styles.separator} />
-                <TouchableOpacity style={styles.modalItem} onPress={() => { setModalVisible(false); navigation.navigate("UpdateProfile"); }}>
-                    <CustomIcon name="user-alt" size={18} color="#333" />
-                    <Text style={styles.modalText}>Update Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalItem} onPress={() => { setModalVisible(false); navigation.navigate("Contact"); }}>
-                    <CustomIcon name="question-circle" size={18} color="#333" />
-                    <Text style={styles.modalText}>Emergency Support</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.modalItem, styles.logoutItem]} onPress={handleLogout}>
-                    <CustomIcon name="sign-out-alt" size={18} color="#ff4444" />
-                    <Text style={styles.logoutLabel}>Logout</Text>
-                </TouchableOpacity>
-            </View>
+      {/* Floating Buttons */}
+      <View style={styles.floatingGroup}>
+        <TouchableOpacity style={[styles.stickyBtn, styles.supportSticky]} onPress={handleEmergencyCall}>
+          <CustomIcon name="phone-alt" size={18} color="white" />
         </TouchableOpacity>
-      </Modal>
+        <TouchableOpacity style={styles.stickyBtn} onPress={() => navigation.navigate("Form")}>
+          <CustomIcon name="calendar-check" size={18} color="white" />
+          <Text style={styles.stickyBtnText}>Book Services</Text>
+        </TouchableOpacity>
+      </View>
       <Navbar />
     </View>
   );
@@ -267,193 +216,50 @@ export default function Home({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
-  header: {
+  loaderContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+  headerContent: { paddingBottom: 10 },
+  welcomeSection: { padding: 20, backgroundColor: "#fff", zIndex: 10 },
+  greetingText: { fontSize: 24, fontWeight: "bold", color: "#1A3067" },
+  subGreeting: { fontSize: 14, color: "#666", marginTop: 4 },
+  searchBarContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 15,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#f0f0f0",
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    marginTop: 15,
+    height: 50,
   },
-  logoContainer: { flexDirection: "row", alignItems: "center" },
-  logo: { width: 45, height: 45, borderRadius: 22.5 },
-  headerBrand: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#1A3067",
-    marginLeft: 10,
-  },
-  headerSubBrand: {
-    fontSize: 14,
-    color: "#666",
-    marginLeft: 10,
-    marginTop: -4,
-  },
-  flatListContainer: { paddingBottom: 20 },
-  row: { flex: 1, justifyContent: "space-between", paddingHorizontal: 15 },
-  itemCard: {
-    backgroundColor: "#fff",
-    width: width / 2 - 22,
-    marginBottom: 15,
-    borderRadius: 15,
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    overflow: "hidden",
-  },
-  cardImage: { width: "100%", height: 110, backgroundColor: "#f0f0f0" },
-  cardInfo: { padding: 12 },
-  typeBadge: {
-    alignSelf: "flex-start",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    marginBottom: 6,
-  },
-  typeText: { color: "#fff", fontSize: 9, fontWeight: "bold" },
-  cardTitle: { fontSize: 14, fontWeight: "700", color: "#333", height: 38 },
-  cardFooter: { flexDirection: "row", alignItems: "center", marginTop: 8 },
-  viewText: {
-    fontSize: 12,
-    color: "#1A3067",
-    fontWeight: "bold",
-    marginRight: 4,
-  },
-  sectionHeaderRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingRight: 20,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#1A3067",
-    marginLeft: 20,
-    marginTop: 25,
-    marginBottom: 15,
-  },
-  seeAllText: { color: "#1A3067", fontWeight: "600", marginTop: 10 },
-  filterContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    marginLeft: 18,
-    marginVertical: 15,
-  },
-  filterBtn: {
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: "#eee",
-    marginHorizontal: 5,
-  },
-  filterBtnActive: { backgroundColor: "#1A3067" },
-  filterText: { color: "#666", fontWeight: "bold" },
+  searchInput: { flex: 1, marginLeft: 10, fontSize: 14, color: "black" },
+  filterContainer: { flexDirection: "row", paddingHorizontal: 20, marginVertical: 15 },
+  filterBtn: { paddingHorizontal: 20, paddingVertical: 8, borderRadius: 20, backgroundColor: "#e8e8e8", marginRight: 10, borderWidth: 1, borderColor: "#ddd" },
+  filterBtnActive: { backgroundColor: "#1A3067", borderColor: "#1A3067" },
+  filterText: { color: "#1A3067", fontWeight: "bold", fontSize: 12 },
   filterTextActive: { color: "#fff" },
-  blogCard: {
-    width: 260,
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    marginRight: 15,
-    borderWidth: 1,
-    borderColor: "#f0f0f0",
-    elevation: 3,
-    marginBottom: 10,
-    overflow: "hidden",
-  },
-  blogImage: { width: "100%", height: 140 },
-  blogInfo: { padding: 15 },
-  blogTag: {
-    color: "#1A3067",
-    fontSize: 10,
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    marginBottom: 5,
-  },
-  blogTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#333",
-    lineHeight: 20,
-    height: 40,
-  },
-  blogFooter: { flexDirection: "row", alignItems: "center", marginTop: 10 },
-  blogReadMore: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#1A3067",
-    marginRight: 5,
-  },
-  connectContainer: { width: "100%", paddingHorizontal: 20, marginTop: 10 },
-  connectCard: {
-    backgroundColor: "#1A3067",
-    borderRadius: 25,
-    padding: 25,
-    flexDirection: "row",
-    overflow: "hidden",
-  },
-  connectTextContainer: { flex: 1, zIndex: 2 },
-  connectSubtitle: {
-    color: "rgba(255,255,255,0.7)",
-    fontSize: 12,
-    fontWeight: "bold",
-    textTransform: "uppercase",
-  },
-  connectTitle: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginVertical: 8,
-  },
-  connectBtn: {
-    backgroundColor: "#fff",
-    alignSelf: "flex-start",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  connectBtnText: { color: "#1A3067", fontWeight: "bold", marginRight: 5 },
-  connectIconBg: { position: "absolute", right: -20, bottom: -20, zIndex: 1 },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
-    justifyContent: "flex-start",
-    alignItems: "flex-end",
-    paddingTop: 100,
-    paddingRight: 20,
-  },
-  modalContent: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    width: 260,
-    elevation: 10,
-  },
-  profileHeader: { alignItems: "center", marginBottom: 15 },
-  profileName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    marginTop: 5,
-  },
-  profileEmail: { fontSize: 13, color: "#777" },
-  separator: { height: 1, backgroundColor: "#eee", marginVertical: 10 },
-  modalItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-  },
-  modalText: { marginLeft: 12, fontSize: 16, color: "#444" },
-  logoutItem: { marginTop: 5 },
-  logoutLabel: {
-    marginLeft: 12,
-    fontSize: 16,
-    color: "#ff4444",
-    fontWeight: "bold",
-  },
-  emptyText: { textAlign: "center", marginTop: 40, color: "#999" },
+  quickAccessWrapper: { marginTop: 10 },
+  miniSectionTitle: { fontSize: 13, fontWeight: "bold", color: "#1A3067", marginLeft: 20, marginBottom: 10, textTransform: "uppercase" },
+  quickAccessContainer: { paddingLeft: 20 },
+  miniButton: { alignItems: "center", marginRight: 15, width: 70 },
+  miniIconCircle: { width: 50, height: 50, borderRadius: 25, justifyContent: "center", alignItems: "center", marginBottom: 5, elevation: 1 },
+  miniButtonLabel: { fontSize: 10, fontWeight: "600", color: "#555" },
+  sectionHeaderRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 20, marginTop: 20, marginBottom: 10 },
+  sectionTitle: { fontSize: 18, fontWeight: "bold", color: "#1A3067" },
+  seeAllText: { color: "#1A3067", fontWeight: "bold", fontSize: 12 },
+  blogCard: { width: 180, backgroundColor: "#fff", borderRadius: 12, marginRight: 15, overflow: "hidden", borderWidth: 1, borderColor: "#eee" },
+  blogImage: { width: "100%", height: 90 },
+  blogInfo: { padding: 8 },
+  blogTitle: { fontSize: 12, fontWeight: "bold", height: 32 },
+  blogReadMore: { fontSize: 10, color: "#1A3067", marginTop: 4, fontWeight: "bold" },
+  row: { justifyContent: "space-between", paddingHorizontal: 20 },
+  itemCard: { width: "48%", marginBottom: 15, borderRadius: 12, backgroundColor: "#f9f9f9", elevation: 2, overflow: "hidden" },
+  cardImage: { width: "100%", height: 100 },
+  cardInfo: { padding: 10 },
+  cardTitle: { fontSize: 12, fontWeight: "bold", color: "#333" },
+  typeBadge: { alignSelf: "flex-start", paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, marginBottom: 4 },
+  typeText: { fontSize: 8, color: "#fff", fontWeight: "bold" },
+  emptyText: { textAlign: "center", marginTop: 40, color: "#999", fontSize: 14 },
+  floatingGroup: { position: "absolute", bottom: 90, right: 20, alignItems: "flex-end" },
+  stickyBtn: { flexDirection: "row", alignItems: "center", paddingHorizontal: 15, paddingVertical: 12, borderRadius: 30, elevation: 5, backgroundColor: "#1A3067", marginTop: 10 },
+  supportSticky: { backgroundColor: "green", height: 50, width: 50, justifyContent: "center", paddingHorizontal: 0 },
+  stickyBtnText: { color: "#fff", fontWeight: "bold", marginLeft: 8, fontSize: 13 },
 });

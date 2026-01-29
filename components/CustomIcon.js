@@ -23,6 +23,15 @@ const ICON_MAP = {
   'question-circle': '\uf059',
   'file-alt': '\uf15c',
   'globe': '\uf0ac',
+  'search': '\uf002',
+  'calendar-check': '\uf274',
+  'layer-group': '\uf5fd',
+  'tasks': '\uf0ae',
+  'hospital': '\uf0f1',
+  'code': '\uf121',
+  'ad': '\uf641',
+  'times-circle': '\uf057',
+  'headset': '\uf590',
 };
 
 export default function CustomIcon({ name, size = 24, color = 'black', type = 'Solid' }) {
