@@ -163,6 +163,7 @@ const renderVideo = () => {
 };
 
 
+
   const renderRelatedBlogs = () => {
     if (relatedBlogs.length === 0) return null;
 
@@ -238,7 +239,7 @@ const renderVideo = () => {
             style={styles.ctaButton}
             onPress={() => navigation.navigate("Form")}
           >
-            <Text style={styles.ctaText}>Enquire About This Solution</Text>
+            <Text style={styles.ctaText}>Inquire About This Solution</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

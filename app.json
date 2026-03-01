@@ -2,7 +2,7 @@
   "expo": {
     "name": "Orbit Media Solutions",
     "slug": "orbit-media",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,6 +20,7 @@
       "bundleIdentifier": "com.orbitmedia.app",
       "infoPlist": {
         "LSApplicationQueriesSchemes": [
+          "mailto",
           "mailto"
         ],
         "ITSAppUsesNonExemptEncryption": false
@@ -27,7 +28,7 @@
     },
     "android": {
       "package": "com.orbitmedia.app",
-      "versionCode": 1,
+      "versionCode": 5,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
@@ -86,9 +87,16 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "15321f9a-d2ff-4cb4-9fb4-e67e45cae124"
+        "projectId": "64217e50-99c4-4cbf-8583-222daa30b8e2"
       }
     },
-    "owner": "orbitmediasolutions"
+    "owner": "orbit-media",
+    "runtimeVersion": "1.0.1",
+    "updates": {
+      "url": "https://u.expo.dev/64217e50-99c4-4cbf-8583-222daa30b8e2",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    }
   }
 }

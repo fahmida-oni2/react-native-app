@@ -24,6 +24,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { LogBox } from "react-native";
 import ProfileScreen from "./pages/Profile";
+import * as Updates from 'expo-updates';
 SplashScreen.preventAutoHideAsync();
 LogBox.ignoreLogs([
   "Warning: TRenderEngineProvider: Support for defaultProps",
@@ -58,15 +59,36 @@ export default function App() {
     }
   }, [fontsLoaded, fontError]);
 
+ useEffect(() => {
+  async function checkForUpdate() {
+    try {
+      const update = await Updates.checkForUpdateAsync();
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync();
+      }
+    } catch (e) {
+      console.log('Update error:', e);
+    }
+  }
+
+  // Only check after fonts and auth are fully loaded
+  if (!__DEV__ && !loading && (fontsLoaded || fontError)) {
+    checkForUpdate();
+  }
+}, [loading, fontsLoaded, fontError]); // ← depends on these
+
   if (loading || (!fontsLoaded && !fontError)) return null;
+
+
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <NavigationContainer>
           <View style={styles.mainContainer}>
-            <Stack.Navigator 
-              initialRouteName="Welcome" 
+            <Stack.Navigator
+              initialRouteName="Welcome"
               screenOptions={{ headerShown: false }}
             >
               {/* Common Screens available to everyone */}
@@ -79,7 +101,7 @@ export default function App() {
               <Stack.Screen name="Blogs" component={BlogScreen} />
               <Stack.Screen name="BlogDetails" component={BlogDetailsScreen} />
               <Stack.Screen name="Contact" component={ContactScreen} />
-              
+
               {/* Auth Screens */}
               <Stack.Screen name="Welcome" component={WelcomeScreen} />
               <Stack.Screen name="Login" component={LoginScreen} />

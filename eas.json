@@ -6,28 +6,32 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      }
+      },
+      "channel": "preview"
     },
     "simulator": {
       "ios": {
         "simulator": true
-      }
+      },
+      "channel": "simulator"
     },
     "production": {
       "autoIncrement": true,
-      "node": "24.12.0"
+      "node": "24.12.0",
+      "channel": "production"
     }
   },
- "submit": {
+  "submit": {
     "production": {
       "android": {
-        "track": "internal" 
+        "track": "internal"
       }
     }
   }

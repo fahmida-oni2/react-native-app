@@ -374,7 +374,7 @@ export default function ProductDetails({ route, navigation }) {
             style={styles.ctaButton}
             onPress={() => navigation.navigate("Form")}
           >
-            <Text style={styles.ctaText}>Enquire Now</Text>
+            <Text style={styles.ctaText}>Inquire Now</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

@@ -2,6 +2,22 @@ import { create } from "zustand";
 
 const BASE_URL = "https://orbitmediasolutions.com/";
 
+const fetchWithRetry = async (url, retries = 3, delay = 1000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await fetch(url, {
+        headers: { Accept: "application/json" },
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      return res;
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+};
+
+
 const useStore = create((set, get) => ({
   products: [],
   services: [],
@@ -15,9 +31,13 @@ const useStore = create((set, get) => ({
 
     try {
       const [prodRes, servRes, blogRes] = await Promise.all([
-        fetch(`${BASE_URL}api/all-products`),
-        fetch(`${BASE_URL}api/all-services`),
-        fetch(`${BASE_URL}api/blog/page`),
+        // fetch(`${BASE_URL}api/all-products`),
+        // fetch(`${BASE_URL}api/all-services`),
+        // fetch(`${BASE_URL}api/blog/page`),
+
+        fetchWithRetry(`${BASE_URL}api/all-products`),
+        fetchWithRetry(`${BASE_URL}api/all-services`),
+        fetchWithRetry(`${BASE_URL}api/blog/page`),
       ]);
 
       const prodJson = await prodRes.json();

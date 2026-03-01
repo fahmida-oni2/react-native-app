@@ -43,6 +43,12 @@ const ICON_MAP = {
   'phone': '\uf095',
   'chevron-up': '\uf077',
   'user-times': '\uf235',
+    'shield-alt': '\uf3ed',
+  'lock': '\uf023',
+  'exclamation-triangle': '\uf071',
+  'user-shield': '\uf505',
+  'user-cog': '\uf4fe',
+  'box': '\uf466',
 };
 
 export default function CustomIcon({ name, size = 24, color = 'black', type = 'Solid' }) {
