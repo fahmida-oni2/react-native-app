@@ -49,6 +49,9 @@ const ICON_MAP = {
   'user-shield': '\uf505',
   'user-cog': '\uf4fe',
   'box': '\uf466',
+  'whatsapp': '\uf232',
+  'whatsapp': '\uf232',
+'sync-alt': '\uf2f1',
 };
 
 export default function CustomIcon({ name, size = 24, color = 'black', type = 'Solid' }) {
