@@ -52,6 +52,8 @@ const ICON_MAP = {
   'whatsapp': '\uf232',
   'whatsapp': '\uf232',
 'sync-alt': '\uf2f1',
+  'bell': '\uf0f3',
+  'sliders-h': '\uf1de',
 };
 
 export default function CustomIcon({ name, size = 24, color = 'black', type = 'Solid' }) {
