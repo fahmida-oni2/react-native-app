@@ -651,6 +651,7 @@ export default function ProfileScreen() {
         <Text style={styles.footerNote}>
           Orbit Media Solutions · Admin Portal · All actions are logged
         </Text>
+        
       </ScrollView>
     </SafeAreaView>
   );
@@ -970,5 +971,18 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginHorizontal: 20,
     lineHeight: 17,
+  },
+   // Legal
+  legalRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    marginTop: 10,
+  },
+  legalTxt:  { fontSize: 11.5, color: "#C0CADF", fontWeight: "500" },
+  legalLink: {
+    fontSize: 11.5, color: "#1A3067",
+    fontWeight: "800", textDecorationLine: "underline",
   },
 });

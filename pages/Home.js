@@ -2667,7 +2667,7 @@ export default function Home({ navigation }) {
   // ── HERO ────────────────────────────────────────────────────────────────
   const renderTopHeader = () => (
     <Animated.View style={[S.hero, { opacity: fadeIn }]}>
-      <View style={S.heroTop}>
+      {/* <View style={S.heroTop}>
         <View style={S.heroBrandRow}>
           <View style={S.heroBrandDot} />
           <Text style={S.heroBrandLabel}>ORBIT MEDIA SOLUTIONS</Text>
@@ -2679,7 +2679,7 @@ export default function Home({ navigation }) {
         <Text style={S.heroSub}>
           Web & Apps · ERP & CRM · SEO · Digital Marketing — helping businesses innovate, grow & succeed since 2018.
         </Text>
-      </View>
+      </View> */}
 
       {/* Book consultation CTA banner */}
       <TouchableOpacity
@@ -2691,9 +2691,9 @@ export default function Home({ navigation }) {
         <View style={S.bbIconBox}>
           <CustomIcon name="calendar-check" size={20} color="#fff" />
         </View>
-        <View style={S.bbTextBox}>
-          <Text style={S.bbTitle}>Book a Free Consultation</Text>
-          <Text style={S.bbSub}>Tell us your needs · We handle the rest</Text>
+       <View style={S.bbTextBox}>
+          <Text style={S.bbTitle}>Connect With Us</Text>
+          <Text style={S.bbSub}>Reach out · Get the services you need</Text>
         </View>
         <View style={S.bbArrow}>
           <CustomIcon name="arrow-right" size={14} color="rgba(255,255,255,0.8)" />
@@ -2794,16 +2794,16 @@ export default function Home({ navigation }) {
           {/* Product/service name */}
           <Text style={S.fcName} numberOfLines={2}>{item.displayTitle}</Text>
           {/* Top 2 feature tags */}
-          <View style={S.fcFeatureRow}>
+          {/* <View style={S.fcFeatureRow}>
             {features.slice(0, 2).map((feat, i) => (
               <View key={i} style={S.fcFeaturePill}>
                 <Text style={S.fcFeatureTxt}>{feat}</Text>
               </View>
             ))}
-          </View>
+          </View> */}
           {/* Footer: type label + arrow */}
           <View style={S.fcFooter}>
-            <Text style={S.fcType}>{isProd ? "Product" : "Service"}</Text>
+            <Text style={S.fcType}>View Details</Text>
             <View style={S.fcArrow}>
               <CustomIcon name="arrow-right" size={9} color={C.white} />
             </View>
