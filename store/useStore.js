@@ -6,17 +6,48 @@ const fetchWithRetry = async (url, retries = 3, delay = 1000) => {
   for (let i = 0; i < retries; i++) {
     try {
       const res = await fetch(url, {
-        headers: { Accept: "application/json" },
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        },
       });
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+      if (!res.ok) {
+        const errorBody = await res.text(); 
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
       return res;
     } catch (err) {
+      console.warn(`Attempt ${i + 1} failed for ${url}: ${err.message}`);
       if (i === retries - 1) throw err;
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
 };
 
+const fetchAllBlogs = async () => {
+  let page = 1;
+  let allBlogs = [];
+
+  while (true) {
+    const res = await fetchWithRetry(`${BASE_URL}api/blog/page?page=${page}`);
+    const json = await res.json();
+
+    const pageBlogs = json.data?.blogs?.data || [];
+    allBlogs = [...allBlogs, ...pageBlogs];
+
+    const currentPage = json.data?.blogs?.current_page;
+    const lastPage = json.data?.blogs?.last_page;
+
+    if (!lastPage || currentPage >= lastPage) break;
+    page++;
+  }
+
+  return allBlogs;
+};
 
 const useStore = create((set, get) => ({
   products: [],
@@ -24,28 +55,30 @@ const useStore = create((set, get) => ({
   blogs: [],
   allData: [],
   loading: false,
-  _hasHydrated: true,
+  lastFetched: null, 
 
-  fetchHomeData: async () => {
-    if (get().allData.length === 0) set({ loading: true });
+  fetchHomeData: async (forceRefresh = false) => {
+    const { allData } = get();
+  
+    if (!forceRefresh && allData.length > 0) {
+      return;
+    }
+    set({ loading: true });
 
     try {
       const [prodRes, servRes, blogRes] = await Promise.all([
-        // fetch(`${BASE_URL}api/all-products`),
-        // fetch(`${BASE_URL}api/all-services`),
-        // fetch(`${BASE_URL}api/blog/page`),
-
         fetchWithRetry(`${BASE_URL}api/all-products`),
         fetchWithRetry(`${BASE_URL}api/all-services`),
-        fetchWithRetry(`${BASE_URL}api/blog/page`),
+        fetchWithRetry(`${BASE_URL}api/blog/page?page=1`),
       ]);
 
-      const prodJson = await prodRes.json();
-      const servJson = await servRes.json();
-      const blogJson = await blogRes.json();
-      //  console.log(blogJson)
-      // Mapping Products
-      const prods = (prodJson.products || []).map((item) => ({
+      const [prodJson, servJson, blogJson] = await Promise.all([
+        prodRes.json(),
+        servRes.json(),
+        blogRes.json(),
+      ]);
+
+      const prods = (prodJson.products?.data || []).map((item) => ({
         ...item,
         type: "Products",
         uniqueKey: `prod-${item.id}`,
@@ -53,7 +86,6 @@ const useStore = create((set, get) => ({
         displayImage: item.product_image,
       }));
 
-      // Mapping Services
       const servs = (servJson.services?.data || []).map((item) => ({
         ...item,
         type: "Services",
@@ -62,23 +94,21 @@ const useStore = create((set, get) => ({
         displayImage: item.service_image,
       }));
 
-      // FOR BLOG:
-      const mappedBlogs = (blogJson.data?.blogs || []).map((item) => ({
+      const rawBlogs = blogJson.data?.blogs?.data || [];
+      const mappedBlogs = rawBlogs.map(item => ({
         ...item,
         type: "Blogs",
         uniqueKey: `blog-${item.id}`,
         displayTitle: item.blog_title,
         displayImage: item.banner_image,
-        description: item.banner_description,
-        htmlContent: item.blog_features,
-      })).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));;
-
+      }));
       set({
         products: prods,
         services: servs,
         blogs: mappedBlogs,
         allData: [...prods, ...servs],
         loading: false,
+        lastFetched: Date.now(),
       });
     } catch (error) {
       console.error("Fetch Error:", error);

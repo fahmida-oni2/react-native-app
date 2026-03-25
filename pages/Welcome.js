@@ -69,7 +69,7 @@ import {
   StatusBar,
   ScrollView,
 } from "react-native";
-
+import { CommonActions } from '@react-navigation/native';
 const { width, height } = Dimensions.get("window");
 
 const SERVICES = [
@@ -87,11 +87,21 @@ const STATS = [
 ];
 
 export default function Welcome({ navigation }) {
+  
+  // 2. Define the reset handler
+  const handleGetStarted = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      })
+    );
+  };
+
   return (
     <View style={styles.root}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      {/* Decorative background shapes */}
       <View style={styles.shapeTL} />
       <View style={styles.shapeBR} />
       <View style={styles.glowBlob} />
@@ -101,17 +111,12 @@ export default function Welcome({ navigation }) {
         showsVerticalScrollIndicator={false}
         bounces={false}
       >
-
-        {/* ══ TOP SECTION ══════════════════════════════ */}
         <View style={styles.topSection}>
-
-          {/* Brand label */}
           <View style={styles.brandRow}>
             <View style={styles.brandAccentLine} />
             <Text style={styles.brandLabel}>ORBIT MEDIA SOLUTIONS LIMITED</Text>
           </View>
 
-          {/* Logo + headline */}
           <View style={styles.heroRow}>
             <View style={styles.logoWrap}>
               <View style={styles.logoShadowRing} />
@@ -134,18 +139,16 @@ export default function Welcome({ navigation }) {
             </View>
           </View>
 
-          {/* Body copy */}
           <View style={styles.bodyWrap}>
             <Text style={styles.body}>
               From web design & mobile apps to ERP, CRM, SEO and creative media —
-              helping brands{" "}
-              <Text style={styles.bodyBold}>innovate, grow & succeed.</Text>
+              helping brands <Text style={styles.bodyBold}>innovate, grow & succeed.</Text>
             </Text>
           </View>
 
-          {/* Service pills */}
           <View style={styles.pillsWrap}>
             <View style={styles.pillsRow}>
+              {/* Ensure SERVICES array is defined globally or imported */}
               {SERVICES.map((s) => (
                 <View key={s.label} style={styles.pill}>
                   <Text style={styles.pillIcon}>{s.icon}</Text>
@@ -154,13 +157,10 @@ export default function Welcome({ navigation }) {
               ))}
             </View>
           </View>
-
         </View>
 
-        {/* ══ DIVIDER ══════════════════════════════════ */}
         <View style={styles.divider} />
 
-        {/* ══ TRUST ROW ════════════════════════════════ */}
         <View style={styles.trustRow}>
           {[
             { icon: "🔒", text: "Secure & Private" },
@@ -174,12 +174,11 @@ export default function Welcome({ navigation }) {
           ))}
         </View>
 
-        {/* ══ CTA SECTION ══════════════════════════════ */}
         <View style={styles.ctaSection}>
-
+          {/* 3. Update the TouchableOpacity to use handleGetStarted */}
           <TouchableOpacity
             style={styles.ctaBtn}
-            onPress={() => navigation.navigate("Home")}
+            onPress={handleGetStarted}
             activeOpacity={0.87}
           >
             <View style={styles.ctaBtnInner}>
@@ -187,12 +186,7 @@ export default function Welcome({ navigation }) {
             </View>
             <View style={styles.ctaShine} />
           </TouchableOpacity>
-
-      
-        
-
         </View>
-
       </ScrollView>
     </View>
   );

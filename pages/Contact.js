@@ -34,7 +34,7 @@ export default function Contact({ navigation }) {
         setContactInfo(json.data.setting);
       }
     } catch (error) {
-      console.error("Fetch Error:", error);
+      // console.error("Fetch Error:", error);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -78,7 +78,7 @@ export default function Contact({ navigation }) {
       }
     }
   } catch (error) {
-    console.error("Linking Error:", error);
+    // console.error("Linking Error:", error);
     Alert.alert("Error", "An unexpected error occurred while trying to open the link.");
   }
 };

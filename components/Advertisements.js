@@ -28,9 +28,9 @@ export default function Advertisements() {
         try {
             const response = await fetch(`${BASE_URL}api/all-products`);
             const json = await response.json();
-            setData(json.products || []);
+            setData(json.products?.data || json.products || []);
         } catch (error) {
-            console.error("Fetch Error:", error);
+            // console.error("Fetch Error:", error);
         } finally {
             setIsLoading(false);
             setRefreshing(false);

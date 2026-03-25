@@ -43,24 +43,24 @@ export default function ServiceDetails({ route, navigation }) {
         const response = await fetch(`${BASE_URL}api/services/${slug}`);
         const json = await response.json();
 
-        const faqRes = await fetch(`${BASE_URL}api/faq/index`);
-        const faqJson = await faqRes.json();
-        console.log(faqJson);
+        // const faqRes = await fetch(`${BASE_URL}api/faq/index`);
+        // const faqJson = await faqRes.json();
+        // console.log(faqJson);
         if (json.success) {
           setApiData(json.data);
 
           const actualId = json.data.service.id;
 
-          if (faqJson.status && faqJson.data) {
-            const filteredFaqs = faqJson.data.filter((item) => {
-              return String(item.service_id) === String(actualId);
-            });
+          // if (faqJson.status && faqJson.data) {
+          //   const filteredFaqs = faqJson.data.filter((item) => {
+          //     return String(item.service_id) === String(actualId);
+          //   });
 
-            console.log(
-              `Found ${filteredFaqs.length} FAQs for ID: ${actualId}`,
-            );
-            setFaqs(filteredFaqs);
-          }
+          //   console.log(
+          //     `Found ${filteredFaqs.length} FAQs for ID: ${actualId}`,
+          //   );
+          //   setFaqs(filteredFaqs);
+          // }
         }
       } catch (error) {
         console.error("Fetch Error:", error);

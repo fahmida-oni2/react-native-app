@@ -48,7 +48,7 @@ export default function BlogDetails({ route, navigation }) {
           setRelatedBlogs(json.data.related_blogs || []);
         }
       } catch (error) {
-        console.error("Fetch Error:", error);
+        // console.error("Fetch Error:", error);
       } finally {
         setLoading(false);
       }
@@ -71,7 +71,7 @@ export default function BlogDetails({ route, navigation }) {
         Alert.alert("Error", "URL not supported: " + url);
       }
     } catch (error) {
-      console.error("Link Error", error);
+      // console.error("Link Error", error);
     }
   };
 

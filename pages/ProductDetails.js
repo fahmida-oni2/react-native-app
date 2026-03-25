@@ -38,42 +38,89 @@ export default function ProductDetails({ route, navigation }) {
 
   const BASE_URL = "https://orbitmediasolutions.com/";
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(`${BASE_URL}api/product/${slug}`);
+  //       const json = await response.json();
+
+  //       const faqRes = await fetch(`${BASE_URL}api/faq/index`);
+  //       const faqJson = await faqRes.json();
+
+  //       if (json.success) {
+  //         setApiData(json.data);
+
+  //         const actualId = json.data.product.id;
+
+  //         if (faqJson.status && faqJson.data) {
+  //           const filteredFaqs = faqJson.data.filter((item) => {
+  //             return (
+  //               String(item.product_id) === String(actualId) 
+  //             );
+  //           });
+
+  //           console.log(
+  //             `Found ${filteredFaqs.length} FAQs for ID: ${actualId}`,
+  //           );
+  //           setFaqs(filteredFaqs);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Fetch Error:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   if (slug) fetchData();
+  // }, [slug]);
+  
   useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}api/product/${slug}`);
+      const json = await response.json();
+
+      // Safe FAQ fetch
+      let faqJson = null;
       try {
-        const response = await fetch(`${BASE_URL}api/product/${slug}`);
-        const json = await response.json();
-
         const faqRes = await fetch(`${BASE_URL}api/faq/index`);
-        const faqJson = await faqRes.json();
+        const contentType = faqRes.headers.get("content-type");
 
-        if (json.success) {
-          setApiData(json.data);
-
-          const actualId = json.data.product.id;
-
-          if (faqJson.status && faqJson.data) {
-            const filteredFaqs = faqJson.data.filter((item) => {
-              return (
-                String(item.product_id) === String(actualId) 
-              );
-            });
-
-            console.log(
-              `Found ${filteredFaqs.length} FAQs for ID: ${actualId}`,
-            );
-            setFaqs(filteredFaqs);
-          }
+        if (!faqRes.ok) {
+          console.warn("FAQ API error, status:", faqRes.status);
+        } else if (!contentType?.includes("application/json")) {
+          const text = await faqRes.text();
+          console.warn("FAQ API returned non-JSON:", text.slice(0, 200));
+        } else {
+          faqJson = await faqRes.json();
         }
-      } catch (error) {
-        console.error("Fetch Error:", error);
-      } finally {
-        setLoading(false);
+      } catch (faqError) {
+        console.warn("FAQ fetch failed:", faqError.message);
       }
-    };
 
-    if (slug) fetchData();
-  }, [slug]);
+      if (json.success) {
+        setApiData(json.data);
+        const actualId = json.data.product.id;
+
+        if (faqJson?.status && faqJson?.data) {
+          const filteredFaqs = faqJson.data.filter(
+            (item) => String(item.product_id) === String(actualId)
+          );
+          console.log(`Found ${filteredFaqs.length} FAQs for ID: ${actualId}`);
+          setFaqs(filteredFaqs);
+        }
+      }
+    } catch (error) {
+      console.error("Fetch Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (slug) fetchData();
+}, [slug]);
+  
   const toggleFaq = (id) => {
     setExpandedFaq(expandedFaq === id ? null : id);
   };
