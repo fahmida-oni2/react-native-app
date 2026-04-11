@@ -162,25 +162,4 @@ This app is live on the **Google Play Store** under the **Orbit Media Solutions 
 
 🔗 [Full Privacy Policy](https://sites.google.com/view/orbit-media-privacy-policy/home)
 
----
 
-## Contact & Support
-
-| | |
-|---|---|
-| 🌐 Website | [orbitmediasolutions.com](https://orbitmediasolutions.com/) |
-| 📧 Support | info@theorbit.one |
-
----
-
-## Developer
-
-**Fahmida Rahman** — Frontend Developer & EEE Graduate, Dhaka, Bangladesh
-
-🔗 [LinkedIn](https://linkedin.com) · [GitHub](https://github.com) · [Portfolio](https://portfolio.com)
-
----
-
-## License
-
-© 2026 Orbit Media Solutions Limited. All rights reserved.
