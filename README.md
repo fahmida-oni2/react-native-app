@@ -22,9 +22,9 @@
 ## Screenshots
 
 <p align="center">
-  <img src="./screenshot1.jpeg" width="270" alt="Onboarding Screen" style="margin-right: 20px;" />
+  <img src="https://i.ibb.co/d4Lx64G6/WhatsApp-Image-2026-04-11-at-10-30-14-PM-1.jpg" width="270" alt="Onboarding Screen" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="./screenshot2.jpeg" width="270" alt="Home Dashboard" />
+  <img src="https://i.ibb.co/KxDG2gxV/WhatsApp-Image-2026-04-11-at-10-30-14-PM.jpg" width="270" alt="Home Dashboard" />
 </p>
 
 <p align="center">
