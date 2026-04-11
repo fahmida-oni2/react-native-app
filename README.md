@@ -105,7 +105,7 @@ This project pushed me in ways no structured course ever did. Many of the proble
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/orbit-one.git
+git clone https://github.com/fahmida-oni2/orbit-one-app.gitt
 cd orbit-one
 
 # Install dependencies
